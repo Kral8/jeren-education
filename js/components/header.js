@@ -1,17 +1,18 @@
 import { t } from '../i18n/index.js';
 import { renderLanguageSwitcher } from './language-switcher.js';
+import { getUser, getRole, isAuthenticated } from '../services/auth.service.js';
 
-const NAV_ITEMS = [
+const NAV_PUBLIC = [
   { key: 'nav.home', file: 'index.html', page: 'home' },
+  { key: 'nav.aria', file: 'aria.html', page: 'aria' },
+  { key: 'nav.checkWork', file: 'check-work.html', page: 'check-work' },
   { key: 'nav.library', file: 'library.html', page: 'library' },
   { key: 'nav.dictionaries', file: 'dictionaries.html', page: 'dictionaries' },
-  { key: 'nav.tests', file: 'tests.html', page: 'tests' },
-  { key: 'nav.stress', file: 'stress.html', page: 'stress' },
-  { key: 'nav.coursework', file: 'coursework.html', page: 'coursework' },
-  { key: 'nav.aria', file: 'aria.html', page: 'aria' },
-  { key: 'nav.materials', file: 'materials.html', page: 'materials' },
-  { key: 'nav.teachers', file: 'teachers.html', page: 'teachers' },
-  { key: 'nav.about', file: 'about.html', page: 'about' },
+];
+
+const NAV_EXTRA = [
+  { key: 'nav.dashboard', file: 'dashboard.html', page: 'dashboard' },
+  { key: 'nav.adminTeachers', file: 'admin.html', page: 'admin', roles: ['admin'] },
 ];
 
 function resolveHref(file, isSubpage) {
@@ -19,23 +20,33 @@ function resolveHref(file, isSubpage) {
   return isSubpage ? file : `pages/${file}`;
 }
 
+function getNavItems() {
+  const role = getRole();
+  const items = [...NAV_PUBLIC];
+  if (isAuthenticated()) {
+    NAV_EXTRA.forEach((item) => {
+      if (!item.roles || item.roles.includes(role)) items.push(item);
+    });
+  }
+  return items;
+}
+
+function renderNavLinks(isSubpage, activePage, className) {
+  return getNavItems().map(({ key, file, page }) => {
+    const url = resolveHref(file, isSubpage);
+    const isActive = page === activePage;
+    return `<a href="${url}" class="${className}${isActive ? ` ${className}--active` : ''}"
+               ${isActive ? 'aria-current="page"' : ''} data-i18n="${key}">${t(key)}</a>`;
+  }).join('');
+}
+
 export function renderHeader(isSubpage = false, activePage = '') {
-  const navLinks = NAV_ITEMS.map(({ key, file, page }) => {
-    const url = resolveHref(file, isSubpage);
-    const isActive = page === activePage;
-    return `<a href="${url}" class="header__nav-link${isActive ? ' header__nav-link--active' : ''}"
-               ${isActive ? 'aria-current="page"' : ''} data-i18n="${key}">${t(key)}</a>`;
-  }).join('');
-
-  const mobileLinks = NAV_ITEMS.map(({ key, file, page }) => {
-    const url = resolveHref(file, isSubpage);
-    const isActive = page === activePage;
-    return `<a href="${url}" class="mobile-nav__link${isActive ? ' mobile-nav__link--active' : ''}"
-               ${isActive ? 'aria-current="page"' : ''} data-i18n="${key}">${t(key)}</a>`;
-  }).join('');
-
   const homeUrl = resolveHref('index.html', isSubpage);
-  const loginUrl = isSubpage ? 'login.html' : 'pages/login.html';
+  const loginUrl = resolveHref('login.html', isSubpage);
+  const user = getUser();
+  const loginLabel = user?.displayName
+    ? user.displayName.split(' ')[0]
+    : t('nav.login');
 
   return `
     <header class="header" role="banner">
@@ -44,10 +55,10 @@ export function renderHeader(isSubpage = false, activePage = '') {
           <span class="header__logo-name">${t('brand.name')}</span>
           <span class="header__logo-tagline">${t('brand.tagline')}</span>
         </a>
-        <nav class="header__nav" aria-label="Main navigation">${navLinks}</nav>
+        <nav class="header__nav" aria-label="Main navigation">${renderNavLinks(isSubpage, activePage, 'header__nav-link')}</nav>
         <div class="header__actions">
           ${renderLanguageSwitcher()}
-          <a href="${loginUrl}" class="btn btn--secondary btn--sm header__login" data-i18n="nav.login">${t('nav.login')}</a>
+          <a href="${loginUrl}" class="btn btn--secondary btn--sm header__login" data-i18n="nav.login">${loginLabel}</a>
           <button class="header__menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="mobile-nav">
             <span class="header__menu-toggle-line"></span>
             <span class="header__menu-toggle-line"></span>
@@ -59,10 +70,10 @@ export function renderHeader(isSubpage = false, activePage = '') {
     <div class="mobile-nav" id="mobile-nav" aria-hidden="true">
       <div class="mobile-nav__backdrop"></div>
       <nav class="mobile-nav__panel" aria-label="Mobile navigation">
-        ${mobileLinks}
+        ${renderNavLinks(isSubpage, activePage, 'mobile-nav__link')}
         <hr class="mobile-nav__divider">
         <div class="mobile-nav__footer">
-          <a href="${loginUrl}" class="btn btn--primary btn--full" data-i18n="nav.login">${t('nav.login')}</a>
+          <a href="${loginUrl}" class="btn btn--primary btn--full">${loginLabel}</a>
         </div>
       </nav>
     </div>
@@ -94,6 +105,8 @@ export function initMobileNav() {
   });
 
   backdrop?.addEventListener('click', closeMenu);
-  mobileNav.querySelectorAll('.mobile-nav__link').forEach((link) => link.addEventListener('click', closeMenu));
+  mobileNav.querySelectorAll('.mobile-nav__link, .mobile-nav__footer a').forEach((link) => {
+    link.addEventListener('click', closeMenu);
+  });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
 }

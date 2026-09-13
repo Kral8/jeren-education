@@ -1,190 +1,195 @@
 /* ==========================================================================
    JEREN EDUCATION — Design System Variables
-   Premium Education × Technology
+   DARK EMERALD × MATTE GOLD
    Created by Jeren Gulmyradowa
    ========================================================================== */
 
 :root {
 
   /* --------------------------------------------------------------------------
-     Colors — Background
-     Deep graphite palette with subtle warm undertone for premium feel
+     Colors — Background (Dark Emerald)
      -------------------------------------------------------------------------- */
 
-  --color-bg-primary:        #0a0a0c;
-  --color-bg-secondary:      #111114;
-  --color-bg-surface:        #16161a;
-  --color-bg-elevated:       #1c1c22;
-  --color-bg-glass:          rgba(255, 255, 255, 0.04);
+  --color-emerald-deep:      #071A15;
+  --color-emerald-base:      #09231C;
+  --color-emerald-mid:       #0B2A21;
+  --color-emerald-rich:      #0E3328;
+
+  --color-bg-primary:        #071A15;
+  --color-bg-secondary:      #0C211A;
+  --color-bg-surface:        #102A21;
+  --color-bg-elevated:       #132F26;
+  --color-bg-glass:          rgba(12, 33, 26, 0.72);
 
 
   /* --------------------------------------------------------------------------
-     Colors — Text
-     Milk-white hierarchy for readability on dark backgrounds
+     Colors — Text (Warm Ivory)
      -------------------------------------------------------------------------- */
 
-  --color-text-primary:      #f5f3ef;
-  --color-text-secondary:    #c8c4bc;
-  --color-text-muted:        #8a8680;
-  --color-text-disabled:     #5c5954;
+  --color-text-primary:      #F0EBE3;
+  --color-text-secondary:    #C9C2B8;
+  --color-text-muted:        #8A948C;
+  --color-text-disabled:     #5C6660;
 
 
   /* --------------------------------------------------------------------------
-     Colors — Brand (Gold Accent)
-     Restrained luxury gold — accent only, never dominant
+     Colors — Brand (Matte Gold)
      -------------------------------------------------------------------------- */
 
-  --color-brand-primary:     #c9a962;
-  --color-brand-light:       #dcc98a;
-  --color-brand-dark:        #a68b4b;
-  --color-brand-glow:        rgba(201, 169, 98, 0.18);
-  --color-brand-subtle:      rgba(201, 169, 98, 0.08);
+  --color-brand-primary:     #C6A15B;
+  --color-brand-light:       #E0C47A;
+  --color-brand-dark:        #8C6A32;
+  --color-brand-glow:        rgba(198, 161, 91, 0.14);
+  --color-brand-subtle:      rgba(198, 161, 91, 0.08);
 
 
   /* --------------------------------------------------------------------------
      Colors — Borders
      -------------------------------------------------------------------------- */
 
-  --color-border-default:    rgba(255, 255, 255, 0.08);
-  --color-border-glass:      rgba(255, 255, 255, 0.12);
-  --color-border-hover:      rgba(201, 169, 98, 0.35);
+  --color-border-default:    rgba(198, 161, 91, 0.18);
+  --color-border-glass:      rgba(198, 161, 91, 0.22);
+  --color-border-hover:      rgba(224, 196, 122, 0.45);
+  --color-border-subtle:     rgba(255, 255, 255, 0.06);
 
 
   /* --------------------------------------------------------------------------
      Colors — Status
-     Muted tones that harmonize with the dark premium palette
      -------------------------------------------------------------------------- */
 
-  --color-status-success:    #6baf8d;
-  --color-status-warning:    #d4a853;
-  --color-status-error:      #c97070;
-  --color-status-info:       #7a9ec9;
+  --color-status-success:    #6BAF8D;
+  --color-status-warning:    #D4A853;
+  --color-status-error:      #C97070;
+  --color-status-info:       #7A9EC9;
 
 
   /* --------------------------------------------------------------------------
-     Typography — Font Families
-     Plus Jakarta Sans: headings — geometric, premium, excellent Cyrillic
-     Inter: body — highest readability, full Cyrillic + Latin support
+     Typography
      -------------------------------------------------------------------------- */
 
   --font-family-base:        'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
   --font-family-heading:     'Plus Jakarta Sans', 'Inter', 'Segoe UI', system-ui, sans-serif;
 
-  /* Font Sizes — modular scale (1.25 ratio, base 16px) */
-  --font-size-xs:            0.75rem;    /* 12px */
-  --font-size-sm:            0.875rem;   /* 14px */
-  --font-size-base:          1rem;       /* 16px */
-  --font-size-md:            1.125rem;   /* 18px */
-  --font-size-lg:            1.25rem;    /* 20px */
-  --font-size-xl:            1.5rem;     /* 24px */
-  --font-size-2xl:           1.875rem;   /* 30px */
-  --font-size-3xl:           2.25rem;    /* 36px */
-  --font-size-4xl:           3rem;       /* 48px */
-  --font-size-5xl:           3.75rem;    /* 60px */
-  --font-size-6xl:           4.5rem;     /* 72px */
+  --font-size-xs:            0.75rem;
+  --font-size-sm:            0.875rem;
+  --font-size-base:          1rem;
+  --font-size-md:            1.125rem;
+  --font-size-lg:            1.25rem;
+  --font-size-xl:            1.5rem;
+  --font-size-2xl:           1.875rem;
+  --font-size-3xl:           2.25rem;
+  --font-size-4xl:           3rem;
+  --font-size-5xl:           3.75rem;
+  --font-size-6xl:           4.5rem;
 
-  /* Line Heights */
   --line-height-tight:       1.2;
   --line-height-snug:        1.35;
   --line-height-normal:      1.5;
   --line-height-relaxed:     1.65;
   --line-height-loose:       1.8;
 
-  /* Font Weights */
   --font-weight-regular:     400;
   --font-weight-medium:      500;
   --font-weight-semibold:    600;
   --font-weight-bold:        700;
 
-  /* Letter Spacing */
   --letter-spacing-tight:    -0.02em;
   --letter-spacing-normal:   0;
   --letter-spacing-wide:     0.04em;
   --letter-spacing-wider:    0.08em;
-  --letter-spacing-widest:   0.12em;
+  --letter-spacing-widest:   0.14em;
 
 
   /* --------------------------------------------------------------------------
-     Spacing — 4px base unit (8-point grid compatible)
-     Chosen for: precise control, industry standard, easy mental math
-     Formula: n × 4px — scales cleanly across all breakpoints
+     Spacing
      -------------------------------------------------------------------------- */
 
-  --space-1:                 0.25rem;   /*  4px */
-  --space-2:                 0.5rem;    /*  8px */
-  --space-3:                 0.75rem;   /* 12px */
-  --space-4:                 1rem;      /* 16px */
-  --space-5:                 1.25rem;   /* 20px */
-  --space-6:                 1.5rem;    /* 24px */
-  --space-8:                 2rem;      /* 32px */
-  --space-10:                2.5rem;    /* 40px */
-  --space-12:                3rem;      /* 48px */
-  --space-16:                4rem;      /* 64px */
-  --space-20:                5rem;      /* 80px */
-  --space-24:                6rem;      /* 96px */
-  --space-32:                8rem;      /* 128px */
+  --space-1:                 0.25rem;
+  --space-2:                 0.5rem;
+  --space-3:                 0.75rem;
+  --space-4:                 1rem;
+  --space-5:                 1.25rem;
+  --space-6:                 1.5rem;
+  --space-8:                 2rem;
+  --space-10:                2.5rem;
+  --space-12:                3rem;
+  --space-16:                4rem;
+  --space-20:                5rem;
+  --space-24:                6rem;
+  --space-32:                8rem;
 
 
   /* --------------------------------------------------------------------------
      Border Radius
-     Soft modern forms — professional, not playful
      -------------------------------------------------------------------------- */
 
-  --radius-sm:               0.375rem;  /*  6px — inputs, tags */
-  --radius-md:               0.625rem;  /* 10px — buttons, cards */
-  --radius-lg:               1rem;      /* 16px — panels, modals */
-  --radius-xl:               1.5rem;    /* 24px — hero elements */
-  --radius-pill:             9999px;    /* full round — pills, badges */
+  --radius-sm:               0.375rem;
+  --radius-md:               0.625rem;
+  --radius-lg:               1rem;
+  --radius-xl:               1.5rem;
+  --radius-pill:             9999px;
 
 
   /* --------------------------------------------------------------------------
      Shadows
-     Very subtle — depth without heaviness
      -------------------------------------------------------------------------- */
 
-  --shadow-subtle:           0 1px 2px rgba(0, 0, 0, 0.24);
-  --shadow-card:             0 4px 16px rgba(0, 0, 0, 0.20),
-                             0 1px 4px rgba(0, 0, 0, 0.12);
-  --shadow-elevated:         0 8px 32px rgba(0, 0, 0, 0.28),
-                             0 2px 8px rgba(0, 0, 0, 0.16);
-  --shadow-gold-glow:        0 0 24px rgba(201, 169, 98, 0.12),
-                             0 0 48px rgba(201, 169, 98, 0.06);
+  --shadow-subtle:           0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-card:             0 4px 24px rgba(0, 0, 0, 0.35),
+                             0 0 0 1px rgba(198, 161, 91, 0.06);
+  --shadow-elevated:         0 12px 40px rgba(0, 0, 0, 0.45),
+                             0 0 0 1px rgba(198, 161, 91, 0.1);
+  --shadow-gold-glow:        0 0 20px rgba(198, 161, 91, 0.12),
+                             0 0 40px rgba(198, 161, 91, 0.06);
+  --shadow-inner-emerald:    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 
 
   /* --------------------------------------------------------------------------
      Glassmorphism
-     Use sparingly — accent surfaces only, not site-wide
      -------------------------------------------------------------------------- */
 
-  --glass-bg:                rgba(255, 255, 255, 0.04);
-  --glass-border:            rgba(255, 255, 255, 0.10);
-  --glass-blur:              12px;
-  --glass-shadow:            0 4px 24px rgba(0, 0, 0, 0.16);
+  --glass-bg:                rgba(12, 33, 26, 0.65);
+  --glass-border:            rgba(198, 161, 91, 0.2);
+  --glass-blur:              16px;
+  --glass-shadow:            0 4px 24px rgba(0, 0, 0, 0.3);
 
 
   /* --------------------------------------------------------------------------
      Gradients
-     Extremely subtle — barely perceptible depth
      -------------------------------------------------------------------------- */
 
   --gradient-bg-premium:     linear-gradient(
                                165deg,
-                               #0a0a0c 0%,
-                               #111114 45%,
-                               #0e0e11 100%
+                               #071A15 0%,
+                               #09231C 40%,
+                               #0B2A21 70%,
+                               #071A15 100%
+                             );
+
+  --gradient-emerald-glow:   radial-gradient(
+                               ellipse 80% 60% at 70% 20%,
+                               rgba(14, 51, 40, 0.5) 0%,
+                               transparent 70%
                              );
 
   --gradient-gold-accent:    linear-gradient(
                                135deg,
-                               #a68b4b 0%,
-                               #c9a962 50%,
-                               #dcc98a 100%
+                               #8C6A32 0%,
+                               #C6A15B 50%,
+                               #E0C47A 100%
                              );
 
   --gradient-surface:        linear-gradient(
                                180deg,
                                rgba(255, 255, 255, 0.03) 0%,
                                rgba(255, 255, 255, 0) 100%
+                             );
+
+  --gradient-gold-line:      linear-gradient(
+                               90deg,
+                               transparent 0%,
+                               rgba(198, 161, 91, 0.5) 50%,
+                               transparent 100%
                              );
 
 
@@ -202,6 +207,10 @@
      -------------------------------------------------------------------------- */
 
   --container-max:           1280px;
+  --bp-mobile:               768px;
+  --bp-tablet:               1024px;
+  --bp-desktop:              1280px;
+  --bp-wide:                 1920px;
   --container-text:          720px;
   --container-narrow:        560px;
   --container-padding:       var(--space-6);
@@ -212,7 +221,6 @@
 
   /* --------------------------------------------------------------------------
      Z-index
-     Small predictable scale — avoids z-index wars
      -------------------------------------------------------------------------- */
 
   --z-base:                  0;
@@ -226,7 +234,7 @@
      Accessibility
      -------------------------------------------------------------------------- */
 
-  --focus-ring-color:        var(--color-brand-primary);
+  --focus-ring-color:        var(--color-brand-light);
   --focus-ring-width:        2px;
   --focus-ring-offset:       2px;
   --focus-ring:              var(--focus-ring-width) solid var(--focus-ring-color);
@@ -235,8 +243,7 @@
 
 
   /* --------------------------------------------------------------------------
-     Responsive — foundational overrides
-     Applied via media queries in layout.css (future steps)
+     Responsive overrides
      -------------------------------------------------------------------------- */
 
   --container-padding-mobile:  var(--space-4);
@@ -248,10 +255,6 @@
 }
 
 
-/* ==========================================================================
-   Accessibility — Reduced Motion
-   ========================================================================== */
-
 @media (prefers-reduced-motion: reduce) {
   :root {
     --transition-fast:   0ms;
@@ -260,11 +263,6 @@
   }
 }
 
-
-/* ==========================================================================
-   Responsive — Tablet (≤ 1024px)
-   ========================================================================== */
-
 @media (max-width: 1024px) {
   :root {
     --container-padding:    var(--space-5);
@@ -272,11 +270,6 @@
     --font-size-hero:       var(--font-size-4xl);
   }
 }
-
-
-/* ==========================================================================
-   Responsive — Mobile (≤ 768px)
-   ========================================================================== */
 
 @media (max-width: 768px) {
   :root {

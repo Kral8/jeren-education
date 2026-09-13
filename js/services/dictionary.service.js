@@ -1,36 +1,194 @@
 /**
- * Dictionary Service — lazy loading architecture
- * Large dictionaries (ozhegov.txt, foreign words JSON) loaded on demand only.
+ * Dictionary Service — JEREN EDUCATION
+ * Catalog, lazy loading, search, caching
  */
 
-let demoCache = null;
+const catalogCache = new Map();
+const dataCache = new Map();
+const ozhegovMetaCache = new Map();
+const ozhegovChunkCache = new Map();
 
-export async function loadDemoDictionary(basePath = '') {
-  if (demoCache) return demoCache;
-  const response = await fetch(`${basePath}data/dictionaries/demo-words.json`);
-  if (!response.ok) throw new Error('Failed to load dictionary');
-  demoCache = await response.json();
-  return demoCache;
+export function normalizeQuery(query) {
+  return query.trim().toLowerCase().replace(/ё/g, 'е');
 }
 
-export async function searchWord(query, basePath = '') {
-  const q = query.trim().toLowerCase();
-  if (!q) return null;
+export async function loadCatalog(basePath = '') {
+  const key = basePath;
+  if (catalogCache.has(key)) return catalogCache.get(key);
 
-  const dict = await loadDemoDictionary(basePath);
-  const entry = dict[q] || dict[Object.keys(dict).find((k) => k.startsWith(q))];
-  return entry || null;
+  const response = await fetch(`${basePath}data/dictionaries/index.json`);
+  if (!response.ok) throw new Error('Failed to load dictionary catalog');
+  const catalog = await response.json();
+  catalogCache.set(key, catalog);
+  return catalog;
 }
 
-export async function loadFullDictionary(name, basePath = '') {
-  // Future: load ozhegov.txt, phraseology.json etc. on demand
-  const map = {
-    phraseology: `${basePath}data/dictionaries/phraseology-demo.json`,
-    foreign: `${basePath}data/dictionaries/foreign-demo.json`,
-  };
-  const url = map[name];
-  if (!url) return null;
-  const response = await fetch(url);
-  if (!response.ok) return null;
-  return response.json();
+export function getDictionaryById(catalog, id) {
+  return catalog.dictionaries.find((d) => d.id === id) || null;
+}
+
+async function loadJsonDictionary(basePath, dataPath) {
+  const cacheKey = `${basePath}${dataPath}`;
+  if (dataCache.has(cacheKey)) return dataCache.get(cacheKey);
+
+  const response = await fetch(`${basePath}data/dictionaries/${dataPath}`);
+  if (!response.ok) throw new Error(`Failed to load ${dataPath}`);
+  const data = await response.json();
+  dataCache.set(cacheKey, data);
+  return data;
+}
+
+async function loadOzhegovMeta(basePath) {
+  const key = basePath;
+  if (ozhegovMetaCache.has(key)) return ozhegovMetaCache.get(key);
+
+  const response = await fetch(`${basePath}data/dictionaries/ozhegov/meta.json`);
+  if (!response.ok) throw new Error('Failed to load ozhegov meta');
+  const meta = await response.json();
+  ozhegovMetaCache.set(key, meta);
+  return meta;
+}
+
+function getOzhegovChunkKey(normalizedQuery) {
+  if (!normalizedQuery) return null;
+  const ch = normalizedQuery[0];
+  const letters = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя';
+  if (letters.includes(ch)) return ch;
+  if (ch === '-') return '_prefix';
+  return '_other';
+}
+
+async function loadOzhegovChunk(basePath, chunkKey) {
+  const cacheKey = `${basePath}${chunkKey}`;
+  if (ozhegovChunkCache.has(cacheKey)) return ozhegovChunkCache.get(cacheKey);
+
+  const meta = await loadOzhegovMeta(basePath);
+  const chunkInfo = meta.chunks[chunkKey];
+  if (!chunkInfo) return {};
+
+  const response = await fetch(`${basePath}data/dictionaries/${chunkInfo.file}`);
+  if (!response.ok) throw new Error(`Failed to load chunk ${chunkKey}`);
+  const chunk = await response.json();
+  ozhegovChunkCache.set(cacheKey, chunk);
+  return chunk;
+}
+
+function matchEntriesFromMap(map, normalizedQuery, limit = 20) {
+  if (!map || !normalizedQuery) return [];
+
+  if (map[normalizedQuery]) {
+    return [{ key: normalizedQuery, entries: map[normalizedQuery], match: 'exact' }];
+  }
+
+  const prefixMatches = [];
+  for (const key of Object.keys(map)) {
+    if (key.startsWith(normalizedQuery)) {
+      prefixMatches.push({ key, entries: map[key], match: 'prefix' });
+      if (prefixMatches.length >= limit) break;
+    }
+  }
+  return prefixMatches;
+}
+
+function searchPhraseology(data, normalizedQuery, limit = 20) {
+  if (data[normalizedQuery]) {
+    return [{ key: normalizedQuery, entry: data[normalizedQuery], match: 'exact' }];
+  }
+  const results = [];
+  for (const key of Object.keys(data)) {
+    if (key.includes(normalizedQuery) || data[key].word?.toLowerCase().replace(/ё/g, 'е').includes(normalizedQuery)) {
+      results.push({ key, entry: data[key], match: 'partial' });
+      if (results.length >= limit) break;
+    }
+  }
+  return results;
+}
+
+function searchForeignWords(data, normalizedQuery, limit = 20) {
+  if (data[normalizedQuery]) {
+    return [{ key: normalizedQuery, entry: data[normalizedQuery], match: 'exact' }];
+  }
+  const results = [];
+  for (const key of Object.keys(data)) {
+    if (key.startsWith(normalizedQuery)) {
+      results.push({ key, entry: data[key], match: 'prefix' });
+      if (results.length >= limit) break;
+    }
+  }
+  return results;
+}
+
+/**
+ * Search a dictionary by id
+ * @returns {{ results: Array, dictionary: object, query: string }}
+ */
+export async function searchDictionary(dictionaryId, query, basePath = '', limit = 20) {
+  const catalog = await loadCatalog(basePath);
+  const dictionary = getDictionaryById(catalog, dictionaryId);
+  if (!dictionary) throw new Error('Dictionary not found');
+  if (!dictionary.searchable) {
+    return { results: [], dictionary, query, archive: true };
+  }
+
+  const normalizedQuery = normalizeQuery(query);
+  if (!normalizedQuery) return { results: [], dictionary, query: normalizedQuery };
+
+  if (dictionary.id === 'ozhegov') {
+    const chunkKey = getOzhegovChunkKey(normalizedQuery);
+    const chunk = await loadOzhegovChunk(basePath, chunkKey);
+    let results = matchEntriesFromMap(chunk, normalizedQuery, limit);
+
+    if (!results.length && chunkKey !== '_other') {
+      const meta = await loadOzhegovMeta(basePath);
+      for (const altKey of Object.keys(meta.chunks)) {
+        if (altKey === chunkKey) continue;
+        const altChunk = await loadOzhegovChunk(basePath, altKey);
+        results = matchEntriesFromMap(altChunk, normalizedQuery, limit);
+        if (results.length) break;
+      }
+    }
+
+    return {
+      results: results.map((r) => ({
+        ...r,
+        entries: r.entries,
+        type: 'ozhegov',
+      })),
+      dictionary,
+      query: normalizedQuery,
+    };
+  }
+
+  if (dictionary.id === 'foreign-words') {
+    const data = await loadJsonDictionary(basePath, dictionary.data);
+    return {
+      results: searchForeignWords(data, normalizedQuery, limit).map((r) => ({
+        ...r,
+        type: 'foreign',
+      })),
+      dictionary,
+      query: normalizedQuery,
+    };
+  }
+
+  if (dictionary.id === 'phraseology') {
+    const data = await loadJsonDictionary(basePath, dictionary.data);
+    return {
+      results: searchPhraseology(data, normalizedQuery, limit).map((r) => ({
+        ...r,
+        type: 'phraseology',
+      })),
+      dictionary,
+      query: normalizedQuery,
+    };
+  }
+
+  return { results: [], dictionary, query: normalizedQuery };
+}
+
+export function clearDictionaryCache() {
+  catalogCache.clear();
+  dataCache.clear();
+  ozhegovMetaCache.clear();
+  ozhegovChunkCache.clear();
 }

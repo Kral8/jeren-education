@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Библиотека — JEREN EDUCATION</title>
-  <meta name="description" content="Библиотека образовательных материалов JEREN EDUCATION">
+  <meta name="description" content="Цифровая библиотека образовательной платформы JEREN EDUCATION">
   <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/base.css">
@@ -19,15 +19,16 @@
     <main>
       <div class="page-header container">
         <h1 class="page-header__title" data-i18n="library.title">Библиотека</h1>
-        <p class="page-header__subtitle" data-i18n="library.subtitle">Поиск и просмотр образовательных материалов.</p>
+        <p class="page-header__subtitle" data-i18n="library.subtitleFull">Цифровая библиотека образовательной платформы JEREN EDUCATION</p>
       </div>
       <section class="section container">
-        <div class="search-input" style="margin-bottom:var(--space-6);">
-          <svg class="search-input__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          <input type="search" class="search-input__field" id="library-search" data-i18n-placeholder="library.search" placeholder="Поиск материалов...">
+        <div class="library-toolbar card card--glass" style="padding:var(--space-6);margin-bottom:var(--space-8);">
+          <div class="search-input">
+            <svg class="search-input__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="search" class="search-input__field" id="library-search" data-i18n-placeholder="library.search" placeholder="Поиск по названию или автору..." autocomplete="off">
+          </div>
         </div>
-        <div class="filters" id="library-filters"></div>
-        <div class="grid grid--auto" id="library-grid"></div>
+        <div class="grid grid--auto library-grid" id="library-grid"></div>
       </section>
     </main>
     <div id="site-footer"></div>

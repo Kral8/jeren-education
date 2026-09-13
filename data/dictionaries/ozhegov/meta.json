@@ -1,0 +1,126 @@
+{
+  "id": "ozhegov",
+  "totalKeys": 38955,
+  "chunks": {
+    "_prefix": {
+      "file": "ozhegov/_prefix.json",
+      "entries": 3
+    },
+    "а": {
+      "file": "ozhegov/а.json",
+      "entries": 823
+    },
+    "б": {
+      "file": "ozhegov/б.json",
+      "entries": 1552
+    },
+    "в": {
+      "file": "ozhegov/в.json",
+      "entries": 2647
+    },
+    "г": {
+      "file": "ozhegov/г.json",
+      "entries": 1085
+    },
+    "д": {
+      "file": "ozhegov/д.json",
+      "entries": 1510
+    },
+    "е": {
+      "file": "ozhegov/е.json",
+      "entries": 139
+    },
+    "ж": {
+      "file": "ozhegov/ж.json",
+      "entries": 296
+    },
+    "з": {
+      "file": "ozhegov/з.json",
+      "entries": 1922
+    },
+    "и": {
+      "file": "ozhegov/и.json",
+      "entries": 989
+    },
+    "й": {
+      "file": "ozhegov/й.json",
+      "entries": 8
+    },
+    "к": {
+      "file": "ozhegov/к.json",
+      "entries": 2425
+    },
+    "л": {
+      "file": "ozhegov/л.json",
+      "entries": 815
+    },
+    "м": {
+      "file": "ozhegov/м.json",
+      "entries": 1510
+    },
+    "н": {
+      "file": "ozhegov/н.json",
+      "entries": 2336
+    },
+    "о": {
+      "file": "ozhegov/о.json",
+      "entries": 2891
+    },
+    "п": {
+      "file": "ozhegov/п.json",
+      "entries": 6643
+    },
+    "р": {
+      "file": "ozhegov/р.json",
+      "entries": 2187
+    },
+    "с": {
+      "file": "ozhegov/с.json",
+      "entries": 3800
+    },
+    "т": {
+      "file": "ozhegov/т.json",
+      "entries": 1339
+    },
+    "у": {
+      "file": "ozhegov/у.json",
+      "entries": 1115
+    },
+    "ф": {
+      "file": "ozhegov/ф.json",
+      "entries": 531
+    },
+    "х": {
+      "file": "ozhegov/х.json",
+      "entries": 451
+    },
+    "ц": {
+      "file": "ozhegov/ц.json",
+      "entries": 216
+    },
+    "ч": {
+      "file": "ozhegov/ч.json",
+      "entries": 517
+    },
+    "ш": {
+      "file": "ozhegov/ш.json",
+      "entries": 540
+    },
+    "щ": {
+      "file": "ozhegov/щ.json",
+      "entries": 80
+    },
+    "э": {
+      "file": "ozhegov/э.json",
+      "entries": 392
+    },
+    "ю": {
+      "file": "ozhegov/ю.json",
+      "entries": 54
+    },
+    "я": {
+      "file": "ozhegov/я.json",
+      "entries": 139
+    }
+  }
+}

@@ -2,6 +2,7 @@ import { initI18n } from './i18n/index.js';
 import { renderHeader, initMobileNav } from './components/header.js';
 import { renderFooter } from './components/footer.js';
 import { initLanguageSwitcher } from './components/language-switcher.js';
+import { verifySession } from './services/auth.service.js';
 
 const isSubpage = document.body.dataset.subpage === 'true';
 const activePage = document.body.dataset.page || '';
@@ -16,6 +17,12 @@ function mountLayout() {
   initI18n();
 }
 
-mountLayout();
+async function initApp() {
+  await verifySession();
+  mountLayout();
+}
+
+initApp();
 
 window.addEventListener('langchange', mountLayout);
+window.addEventListener('authchange', mountLayout);

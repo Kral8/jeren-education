@@ -1,6 +1,6 @@
 /* ==========================================================================
-   JEREN EDUCATION — Animations
-   Subtle, performance-conscious motion
+   JEREN EDUCATION — Premium Motion
+   Subtle, luxurious, performance-conscious
    ========================================================================== */
 
 @keyframes fadeIn {
@@ -11,7 +11,7 @@
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -30,35 +30,135 @@
   }
 }
 
-@keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+@keyframes gentleFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+@keyframes orbitSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes orbitSpinReverse {
+  from { transform: rotate(360deg); }
+  to   { transform: rotate(0deg); }
+}
+
+@keyframes goldBreath {
+  0%, 100% {
+    opacity: 0.35;
+    box-shadow: 0 0 20px rgba(198, 161, 91, 0.06);
+  }
+  50% {
+    opacity: 0.65;
+    box-shadow: 0 0 32px rgba(198, 161, 91, 0.14);
+  }
+}
+
+@keyframes lineDrift {
+  0%, 100% { opacity: 0.25; transform: scaleX(0.85); }
+  50%      { opacity: 0.55; transform: scaleX(1); }
+}
+
+@keyframes shimmerGold {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes msgEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% { filter: brightness(1); }
+  50%      { filter: brightness(1.15); }
+}
+
+@keyframes statReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .animate-fade-in {
-  animation: fadeIn var(--transition-slow) ease both;
+  animation: fadeIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp var(--transition-slow) ease both;
+  animation: fadeInUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .animate-fade-in-down {
-  animation: fadeInDown var(--transition-normal) ease both;
+  animation: fadeInDown 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.animate-delay-1 { animation-delay: 100ms; }
-.animate-delay-2 { animation-delay: 200ms; }
-.animate-delay-3 { animation-delay: 300ms; }
-.animate-delay-4 { animation-delay: 400ms; }
-.animate-delay-5 { animation-delay: 500ms; }
+.animate-delay-1 { animation-delay: 120ms; }
+.animate-delay-2 { animation-delay: 240ms; }
+.animate-delay-3 { animation-delay: 380ms; }
+.animate-delay-4 { animation-delay: 520ms; }
+.animate-delay-5 { animation-delay: 660ms; }
+
+.animate-float {
+  animation: gentleFloat 7s ease-in-out infinite;
+}
+
+.animate-orbit {
+  animation: orbitSpin 56s linear infinite;
+}
+
+.animate-orbit-reverse {
+  animation: orbitSpinReverse 38s linear infinite;
+}
+
+.animate-breath {
+  animation: goldBreath 5s ease-in-out infinite;
+}
+
+.aria-msg--enter {
+  animation: msgEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.stat {
+  animation: statReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.stat.animate-delay-1 { animation-delay: 180ms; }
+.stat.animate-delay-2 { animation-delay: 320ms; }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in,
   .animate-fade-in-up,
-  .animate-fade-in-down {
-    animation: none;
+  .animate-fade-in-down,
+  .animate-float,
+  .animate-orbit,
+  .animate-orbit-reverse,
+  .animate-breath,
+  .aria-msg--enter,
+  .stat,
+  .stat__value,
+  .aria-avatar,
+  .hero__eyebrow {
+    animation: none !important;
     opacity: 1;
     transform: none;
+  }
+
+  .hero__eyebrow {
+    background: none;
+    -webkit-text-fill-color: var(--color-brand-primary);
+    color: var(--color-brand-primary);
   }
 }

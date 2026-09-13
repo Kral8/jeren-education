@@ -1,0 +1,13 @@
+name = "jeren-aria-ai"
+main = "src/index.js"
+compatibility_date = "2024-09-13"
+
+# Secrets (never commit values):
+#   wrangler secret put GEMINI_API_KEY
+#   wrangler secret put JEREN_ADMIN_CODE
+#   wrangler secret put SESSION_SECRET
+
+[[kv_namespaces]]
+binding = "TEACHERS_KV"
+id = "fb61fea1508644a7a121da2a86c60a8c"
+preview_id = "636353732f0b47f0a178d190c2e5538a"

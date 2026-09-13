@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ария — AI-помощник — JEREN EDUCATION</title>
-  <meta name="description" content="Ария — AI-помощница JEREN EDUCATION">
+  <meta name="description" content="Ария — AI-помощница JEREN EDUCATION для учителей">
   <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/base.css">
@@ -18,19 +18,25 @@
     <div id="site-header"></div>
     <main>
       <div class="page-header container">
-        <span class="badge badge--gold page-header__badge">AI</span>
         <h1 class="page-header__title" data-i18n="aria.title">Ария</h1>
-        <p class="page-header__subtitle" data-i18n="aria.subtitle">AI-помощница образовательной платформы.</p>
+        <p class="page-header__subtitle" data-i18n="aria.subtitle">Виртуальная помощница для учителей и педагогов.</p>
       </div>
-      <section class="section container">
-        <div class="aria-chat">
-          <div class="aria-chat__messages" id="aria-messages"></div>
+      <section class="section container aria-section">
+        <div class="aria-chat card card--glass">
+          <header class="aria-chat__header">
+            <div class="aria-avatar" aria-hidden="true">А</div>
+            <div class="aria-chat__meta">
+              <div class="aria-chat__name" data-i18n="aria.title">Ария</div>
+              <div class="aria-chat__status" id="aria-status" data-i18n="aria.statusOnline">Онлайн</div>
+            </div>
+          </header>
+          <div class="aria-quick-actions" id="aria-quick-actions" role="group" aria-label="Quick actions"></div>
+          <div class="aria-chat__messages" id="aria-messages" role="log" aria-live="polite" aria-relevant="additions"></div>
           <div class="aria-chat__input">
-            <input type="text" class="form-input" id="aria-input" data-i18n-placeholder="aria.placeholder" placeholder="Задайте вопрос...">
-            <button class="btn btn--primary" id="aria-send" data-i18n="aria.send">Отправить</button>
+            <textarea class="form-input aria-chat__textarea" id="aria-input" rows="1" data-i18n-placeholder="aria.placeholder" placeholder="Задайте вопрос..." autocomplete="off"></textarea>
+            <button class="btn btn--primary aria-chat__send" id="aria-send" type="button" data-i18n="aria.send">Отправить</button>
           </div>
         </div>
-        <p class="aria-disclaimer" id="aria-disclaimer" hidden data-i18n="aria.disclaimer">Ария — виртуальный помощник. Для полноценной работы AI требуется подключение backend API.</p>
         <p class="aria-disclaimer" data-i18n="aria.topics">Я могу помочь с русским языком, литературой, грамматикой, орфографией, курсовыми работами и подготовкой к тестам.</p>
       </section>
     </main>

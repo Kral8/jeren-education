@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Проверка работы — JEREN EDUCATION</title>
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body data-subpage="true" data-page="check-work" data-base="../">
+  <div class="page-wrapper">
+    <div id="site-header"></div>
+    <main>
+      <div class="page-header container">
+        <h1 class="page-header__title" data-i18n="checkWork.title">Проверка работы ученика</h1>
+        <p class="page-header__subtitle" data-i18n="checkWork.subtitle">Загрузите фото или документ для анализа.</p>
+      </div>
+      <section class="section container check-work">
+        <div class="check-work__auth card card--glass" id="check-auth" hidden>
+          <p data-i18n="checkWork.authRequired">Проверка работ доступна только авторизованным учителям.</p>
+          <a href="login.html" class="btn btn--primary" data-i18n="checkWork.goLogin">Войти по коду</a>
+        </div>
+
+        <div class="check-work__flow" id="check-flow">
+          <div class="check-step card card--glass">
+            <h2 class="check-step__title" data-i18n="checkWork.step1">Загрузите работу</h2>
+            <div class="check-upload">
+              <label class="check-upload__btn btn btn--secondary">
+                <span data-i18n="checkWork.photo">Сфотографировать работу</span>
+                <input type="file" accept="image/*" capture="environment" id="file-camera" hidden>
+              </label>
+              <label class="check-upload__btn btn btn--secondary">
+                <span data-i18n="checkWork.choosePhoto">Выбрать фото</span>
+                <input type="file" accept="image/jpeg,image/png,image/webp" id="file-photo" hidden>
+              </label>
+              <label class="check-upload__btn btn btn--secondary">
+                <span data-i18n="checkWork.uploadFile">Загрузить файл</span>
+                <input type="file" accept=".pdf,.txt,.docx,.rtf,application/pdf,text/plain" id="file-doc" hidden>
+              </label>
+            </div>
+            <div class="check-file-preview" id="file-preview" hidden>
+              <img class="check-file-preview__img" id="file-preview-img" alt="" hidden>
+              <div class="check-file-preview__info">
+                <p class="check-file-name" id="file-name"></p>
+                <button type="button" class="btn btn--ghost btn--sm check-file-remove" id="file-remove" data-i18n="checkWork.removeFile">Удалить файл</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="check-step card card--glass">
+            <h2 class="check-step__title" data-i18n="checkWork.step2">Информация о работе</h2>
+            <div class="check-meta">
+              <input type="text" class="form-input" id="meta-subject" data-i18n-placeholder="checkWork.subject" placeholder="Предмет">
+              <input type="text" class="form-input" id="meta-grade" data-i18n-placeholder="checkWork.grade" placeholder="Класс">
+              <input type="text" class="form-input" id="meta-topic" data-i18n-placeholder="checkWork.topic" placeholder="Тема">
+              <input type="text" class="form-input" id="meta-type" data-i18n-placeholder="checkWork.workType" placeholder="Тип работы">
+              <input type="number" class="form-input" id="meta-max" min="1" max="100" value="5" data-i18n-placeholder="checkWork.maxGrade" placeholder="Макс. оценка">
+            </div>
+          </div>
+
+          <button type="button" class="btn btn--primary btn--full btn--lg" id="btn-analyze" data-i18n="checkWork.analyze">Проверить с Арией</button>
+
+          <div class="check-progress card card--glass" id="check-progress" hidden>
+            <p class="check-progress__title" data-i18n="checkWork.analyzing">Ария анализирует работу...</p>
+            <ul class="check-progress__list" id="progress-list"></ul>
+          </div>
+
+          <div class="check-result card card--glass" id="check-result" hidden>
+            <div class="check-result__body" id="result-body"></div>
+            <p class="check-result__disclaimer" data-i18n="checkWork.disclaimer">Оценка является предварительной рекомендацией Арии. Окончательное решение принимает учитель.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div id="site-footer"></div>
+  </div>
+  <script type="module" src="../js/app.js"></script>
+  <script type="module" src="../js/pages/check-work.js"></script>
+</body>
+</html>

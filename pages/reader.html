@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Чтение — JEREN EDUCATION</title>
+  <meta name="description" content="JEREN EDUCATION Digital Reader">
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" href="../css/reader.css">
+</head>
+<body class="je-reader-body" data-subpage="true" data-page="library" data-base="../">
+  <div class="je-reader" id="je-reader">
+    <header class="je-reader-toolbar glass glass--subtle">
+      <div class="je-reader-toolbar__left">
+        <a href="library.html" class="btn btn--ghost btn--sm" data-i18n="library.backToLibrary">← Библиотека</a>
+        <div class="je-reader-toolbar__title" id="reader-title"></div>
+      </div>
+      <div class="je-reader-toolbar__right">
+        <div class="je-reader-font" role="group" aria-label="Font size">
+          <button type="button" class="icon-btn" id="font-decrease" aria-label="A-">A−</button>
+          <span class="je-reader-font__value" id="font-value">100%</span>
+          <button type="button" class="icon-btn" id="font-increase" aria-label="A+">A+</button>
+        </div>
+        <button type="button" class="icon-btn" id="reader-fullscreen" aria-label="Fullscreen">⛶</button>
+      </div>
+      <div class="je-reader-progress">
+        <div class="je-reader-progress__bar" id="reader-progress-bar"></div>
+      </div>
+    </header>
+
+    <div class="je-reader-layout">
+      <aside class="je-reader-toc" id="reader-toc" hidden></aside>
+      <div class="je-reader-scroll" id="reader-scroll">
+        <article class="je-reader-page" id="reader-content">
+          <div class="empty-state" data-i18n="common.loading">Загрузка...</div>
+        </article>
+      </div>
+    </div>
+
+    <div class="je-reader-resume card card--glass" id="reader-resume" hidden>
+      <span data-i18n="library.continueReading">Продолжить чтение</span>
+      <button type="button" class="btn btn--primary btn--sm" id="reader-resume-btn" data-i18n="library.continue">Продолжить</button>
+    </div>
+  </div>
+
+  <script type="module" src="../js/app.js"></script>
+  <script type="module" src="../js/pages/reader.js"></script>
+</body>
+</html>

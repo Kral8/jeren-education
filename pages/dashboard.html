@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мой кабинет — JEREN EDUCATION</title>
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body data-subpage="true" data-page="dashboard" data-base="../">
+  <div class="page-wrapper">
+    <div id="site-header"></div>
+    <main>
+      <div class="page-header container">
+        <h1 class="page-header__title" data-i18n="dashboard.title">Мой кабинет</h1>
+        <p class="page-header__subtitle" id="dashboard-welcome"></p>
+      </div>
+      <section class="section container">
+        <div class="dashboard-grid" id="dashboard-grid"></div>
+        <button type="button" class="btn btn--ghost" id="dashboard-logout" data-i18n="dashboard.logout">Выйти</button>
+      </section>
+    </main>
+    <div id="site-footer"></div>
+  </div>
+  <script type="module" src="../js/app.js"></script>
+  <script type="module" src="../js/pages/dashboard.js"></script>
+</body>
+</html>

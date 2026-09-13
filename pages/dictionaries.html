@@ -19,27 +19,24 @@
     <main>
       <div class="page-header container">
         <h1 class="page-header__title" data-i18n="dictionaries.title">Словари</h1>
-        <p class="page-header__subtitle" data-i18n="dictionaries.subtitle">Интеллектуальный поиск по словарям русского языка.</p>
+        <p class="page-header__subtitle" data-i18n="dictionaries.subtitleFull">Поиск и работа с лексикой в единой образовательной среде JEREN EDUCATION</p>
       </div>
       <section class="section container">
-        <div class="demo-note">
-          <span class="badge badge--gold" data-i18n="common.demo">Демо</span>
-          <span data-i18n="dictionaries.demoNote">Демонстрационная база. Полные словари будут подключены позже.</span>
+        <div class="dict-toolbar card card--glass" style="padding:var(--space-6);margin-bottom:var(--space-8);">
+          <div class="form-group" style="margin-bottom:var(--space-4);">
+            <label class="form-label" for="dict-select" data-i18n="dictionaries.selectDictionary">Выбор словаря</label>
+            <select class="form-select" id="dict-select"></select>
+          </div>
+          <div id="dict-info" style="margin-bottom:var(--space-4);"></div>
+          <div class="search-input">
+            <svg class="search-input__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="search" class="search-input__field" id="dict-search" data-i18n-placeholder="dictionaries.search" placeholder="Введите слово..." autocomplete="off">
+          </div>
+          <div style="margin-top:var(--space-4);">
+            <button type="button" class="btn btn--primary" id="dict-search-btn" data-i18n="common.search">Поиск</button>
+          </div>
         </div>
-        <div class="grid grid--4 grid--gap-sm" style="margin-bottom:var(--space-8);">
-          <span class="badge badge--muted" data-i18n="dictionaries.categories.explanatory">Толковый словарь</span>
-          <span class="badge badge--muted" data-i18n="dictionaries.categories.stress">Словарь ударений</span>
-          <span class="badge badge--muted" data-i18n="dictionaries.categories.phraseology">Фразеологизмы</span>
-          <span class="badge badge--muted" data-i18n="dictionaries.categories.synonyms">Синонимы</span>
-        </div>
-        <div class="search-input">
-          <svg class="search-input__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          <input type="search" class="search-input__field" id="dict-search" data-i18n-placeholder="dictionaries.search" placeholder="Введите слово...">
-        </div>
-        <div style="margin-top:var(--space-4);">
-          <button class="btn btn--primary" id="dict-search-btn" data-i18n="common.search">Поиск</button>
-        </div>
-        <div id="dict-result"></div>
+        <div id="dict-result" class="dict-results"></div>
       </section>
     </main>
     <div id="site-footer"></div>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кабинет Джерен — JEREN EDUCATION</title>
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body data-subpage="true" data-page="admin" data-base="../">
+  <div class="page-wrapper">
+    <div id="site-header"></div>
+    <main>
+      <div class="page-header container">
+        <h1 class="page-header__title" data-i18n="admin.title">Кабинет Джерен</h1>
+        <p class="page-header__subtitle" data-i18n="dashboard.adminWelcome">Добро пожаловать, Джерен Алламурдовна.</p>
+      </div>
+      <section class="section container">
+        <div class="admin-stats" id="admin-stats">
+          <div class="admin-stat card">
+            <div class="admin-stat__value" id="stat-teachers">—</div>
+            <div class="admin-stat__label" data-i18n="admin.teachers">Учителя</div>
+          </div>
+          <div class="admin-stat card">
+            <div class="admin-stat__value" id="stat-active">—</div>
+            <div class="admin-stat__label" data-i18n="admin.activeCodes">Активные коды</div>
+          </div>
+          <div class="admin-stat card">
+            <div class="admin-stat__value" id="stat-new">—</div>
+            <div class="admin-stat__label" data-i18n="admin.newTeachers">Новые учителя</div>
+          </div>
+          <div class="admin-stat card">
+            <div class="admin-stat__value" id="stat-checks">—</div>
+            <div class="admin-stat__label" data-i18n="admin.workChecks">Проверки работ</div>
+          </div>
+        </div>
+        <div class="admin-panel card card--glass">
+          <h2 class="admin-panel__title" data-i18n="admin.teachers">Учителя</h2>
+          <form class="admin-form" id="teacher-form">
+            <div class="admin-form__row">
+              <input type="text" class="form-input" id="teacher-first" data-i18n-placeholder="admin.firstName" placeholder="Имя" required>
+              <input type="text" class="form-input" id="teacher-last" data-i18n-placeholder="admin.lastName" placeholder="Фамилия" required>
+              <button type="submit" class="btn btn--primary" data-i18n="admin.createCode">Создать код учителя</button>
+            </div>
+          </form>
+          <div class="admin-table-wrap">
+            <table class="admin-table" id="teachers-table">
+              <thead>
+                <tr>
+                  <th data-i18n="admin.tableTeacher">Учитель</th>
+                  <th data-i18n="admin.tableCode">Код</th>
+                  <th data-i18n="admin.tableStatus">Статус</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="teachers-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div id="site-footer"></div>
+  </div>
+  <script type="module" src="../js/app.js"></script>
+  <script type="module" src="../js/pages/admin.js"></script>
+</body>
+</html>

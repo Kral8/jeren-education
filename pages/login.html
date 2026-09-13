@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Вход — JEREN EDUCATION</title>
-  <meta name="description" content="Вход в JEREN EDUCATION">
   <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/base.css">
@@ -17,27 +16,31 @@
   <div class="page-wrapper">
     <div id="site-header"></div>
     <main>
-      <div class="page-header container">
-        <h1 class="page-header__title" data-i18n="login.title">Вход</h1>
-        <p class="page-header__subtitle" data-i18n="login.subtitle">Авторизация будет доступна в следующей версии платформы.</p>
-      </div>
-      <section class="section container container--narrow">
-        <form class="card card--elevated" onsubmit="return false;">
-          <div class="form-group">
-            <label class="form-label" for="login-email" data-i18n="login.email">Email</label>
-            <input type="email" class="form-input" id="login-email" disabled>
+      <section class="section container auth-screen">
+        <div class="auth-card card card--glass">
+          <div class="auth-card__brand">JEREN EDUCATION</div>
+          <h1 class="auth-card__title" data-i18n="login.title">Добро пожаловать</h1>
+          <p class="auth-card__subtitle" data-i18n="login.subtitle">Ваше пространство для работы, обучения и интеллектуальной поддержки.</p>
+
+          <div class="auth-card__choices" id="auth-choices">
+            <button type="button" class="btn btn--primary btn--full" id="btn-has-code" data-i18n="login.hasCode">У меня есть код</button>
+            <button type="button" class="btn btn--secondary btn--full" id="btn-guest" data-i18n="login.guest">Войти как гость</button>
           </div>
-          <div class="form-group">
-            <label class="form-label" for="login-password" data-i18n="login.password">Пароль</label>
-            <input type="password" class="form-input" id="login-password" disabled>
-          </div>
-          <button type="submit" class="btn btn--primary btn--full" disabled data-i18n="login.submit">Войти</button>
-          <p class="demo-note" style="margin-top:var(--space-4);margin-bottom:0;" data-i18n="login.comingSoon">Система регистрации и личные кабинеты находятся в разработке.</p>
-        </form>
+
+          <form class="auth-card__form" id="auth-form" hidden>
+            <label class="form-label" for="auth-code" data-i18n="login.codeLabel">Код доступа</label>
+            <input type="text" class="form-input auth-card__input" id="auth-code" autocomplete="off" data-i18n-placeholder="login.codePlaceholder" placeholder="Введите код">
+            <p class="auth-card__error" id="auth-error" hidden data-i18n="login.invalidCode"></p>
+            <button type="submit" class="btn btn--primary btn--full" data-i18n="login.submit">Войти</button>
+          </form>
+
+          <p class="auth-card__note" data-i18n="login.guestNote">Гостевой режим: ограниченный доступ.</p>
+        </div>
       </section>
     </main>
     <div id="site-footer"></div>
   </div>
   <script type="module" src="../js/app.js"></script>
+  <script type="module" src="../js/pages/login.js"></script>
 </body>
 </html>

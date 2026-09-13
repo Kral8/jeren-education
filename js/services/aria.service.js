@@ -1,47 +1,55 @@
 /**
- * ARIA AI Service — Architecture stub
- * Future: Frontend → Backend/Worker → AI API
- * NO API keys in frontend code.
+ * ARIA AI Service — Frontend → Cloudflare Worker → Gemini
+ * NO API keys in frontend.
  */
 
-const API_ENDPOINT = null; // Will be configured via backend
+import { API } from '../config.js';
+import { authHeaders, getUser } from './auth.service.js';
 
 export async function sendMessage(message, history = []) {
-  if (!API_ENDPOINT) {
-    return {
-      success: false,
-      demo: true,
-      reply: getDemoReply(message),
-    };
-  }
-
   try {
-    const response = await fetch(API_ENDPOINT, {
+    const user = getUser();
+    const response = await fetch(API.aria, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, history }),
+      headers: authHeaders(),
+      body: JSON.stringify({
+        message,
+        history: history.map((item) => ({ role: item.role, text: item.text })),
+        context: user ? { role: user.role, displayName: user.displayName } : null,
+      }),
     });
-    if (!response.ok) throw new Error('API error');
-    return await response.json();
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-}
 
-function getDemoReply(message) {
-  const lower = message.toLowerCase();
-  if (lower.includes('курсов') || lower.includes('kurs')) {
-    return 'Для курсовых работ используйте конструктор в разделе «Курсовые работы». Я помогу со структурой, но не буду выдумывать источники и цитаты. Полноценная AI-помощь будет доступна после подключения backend API.';
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok || data.success === false) {
+      console.error('[Aria] request failed', {
+        status: response.status,
+        code: data.code,
+        error: data.error,
+        debug: data.debug,
+        origin: window.location.origin,
+      });
+      return {
+        success: false,
+        error: data.error || 'unavailable',
+        code: data.code,
+        debug: data.debug,
+      };
+    }
+
+    const reply = data.answer || data.text || data.reply || data.response || data.message;
+    if (!reply) {
+      console.error('[Aria] empty reply', data);
+      return { success: false, error: 'empty', code: 'EMPTY_REPLY' };
+    }
+
+    return { success: true, reply };
+  } catch (error) {
+    console.error('[Aria] network error', error);
+    return { success: false, error: 'network', code: 'NETWORK' };
   }
-  if (lower.includes('ударен') || lower.includes('basgy')) {
-    return 'Попробуйте тренажёр ударений в соответствующем разделе платформы. Там вы сможете тренироваться и проходить тесты.';
-  }
-  if (lower.includes('тест') || lower.includes('test')) {
-    return 'В разделе «Тесты» вы найдёте интерактивные задания по русскому языку и литературе с таймером и статистикой.';
-  }
-  return 'Спасибо за ваш вопрос! Я — Ария, виртуальная помощница платформы. Сейчас работаю в демо-режиме. Для полноценных ответов необходимо подключение AI через backend. Могу подсказать, какие разделы платформы помогут с вашим запросом.';
 }
 
 export function isDemoMode() {
-  return !API_ENDPOINT;
+  return false;
 }

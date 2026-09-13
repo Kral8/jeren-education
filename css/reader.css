@@ -1,0 +1,241 @@
+/* JEREN EDUCATION — Premium Digital Reader */
+
+.je-reader-body {
+  overflow: hidden;
+}
+
+.je-reader-body .header,
+.je-reader-body .footer,
+.je-reader-body .page-wrapper > .footer,
+.je-reader-body #site-footer {
+  display: none;
+}
+
+.je-reader {
+  --reader-font-size: 18px;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-primary);
+}
+
+.je-reader-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border-default);
+  background: var(--color-bg-glass);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+.je-reader-toolbar__left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-width: 0;
+  flex: 1;
+}
+
+.je-reader-toolbar__title {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.je-reader-toolbar__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.je-reader-font {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-pill);
+}
+
+.je-reader-font__value {
+  min-width: 44px;
+  text-align: center;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.je-reader-progress {
+  flex-basis: 100%;
+  height: 2px;
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.je-reader-progress__bar {
+  height: 100%;
+  width: 0%;
+  background: var(--gradient-gold-accent);
+  transition: width 120ms linear;
+}
+
+.je-reader-layout {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.je-reader-toc {
+  width: 280px;
+  flex-shrink: 0;
+  padding: var(--space-4);
+  border-right: 1px solid var(--color-border-default);
+  overflow-y: auto;
+  background: var(--color-bg-secondary);
+}
+
+.je-reader-toc__title {
+  font-size: var(--font-size-xs);
+  letter-spacing: var(--letter-spacing-widest);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-3);
+}
+
+.je-reader-toc__item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-1);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.je-reader-toc__item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-brand-primary);
+}
+
+.je-reader-toc__item--l2 { padding-left: var(--space-5); }
+
+.je-reader-scroll {
+  flex: 1;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.je-reader-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-10) var(--space-6) var(--space-24);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: var(--reader-font-size);
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+  color: var(--color-text-primary);
+}
+
+.je-reader__heading {
+  font-family: var(--font-family-heading);
+  font-size: calc(var(--reader-font-size) * 1.35);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.35;
+  color: var(--color-brand-light);
+  margin: var(--space-8) 0 var(--space-4);
+}
+
+.je-reader__heading:first-child { margin-top: 0; }
+
+.je-reader__paragraph {
+  margin-bottom: var(--space-5);
+  color: #E8E2D8;
+}
+
+.je-reader__protected {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.je-reader__pdf {
+  width: 100%;
+  min-height: calc(100dvh - 80px);
+  border: none;
+  background: var(--color-bg-surface);
+}
+
+.je-reader__message {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: var(--space-16);
+}
+
+.je-reader-resume {
+  position: fixed;
+  bottom: var(--space-6);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  z-index: var(--z-toast);
+}
+
+.je-reader:fullscreen {
+  background: var(--color-bg-primary);
+}
+
+@media (max-width: 768px) {
+  .je-reader-toc { display: none; }
+  .je-reader-page { padding: var(--space-8) var(--space-4) var(--space-20); }
+  .je-reader-toolbar {
+    padding: var(--space-2) var(--space-3);
+    gap: var(--space-2);
+  }
+  .je-reader-toolbar__left {
+    gap: var(--space-2);
+    min-width: 0;
+  }
+  .je-reader-toolbar__title {
+    max-width: min(36vw, 140px);
+    font-size: var(--font-size-xs);
+  }
+  .je-reader-font__value { min-width: 36px; font-size: 0.6875rem; }
+  .icon-btn {
+    min-width: var(--min-touch-target);
+    min-height: var(--min-touch-target);
+  }
+  .je-reader-resume {
+    left: var(--space-4);
+    right: var(--space-4);
+    transform: none;
+    width: auto;
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 430px) {
+  .je-reader-toolbar__right .je-reader-font {
+    gap: 0;
+  }
+  .je-reader-page {
+    padding: var(--space-6) var(--space-3) var(--space-16);
+  }
+}

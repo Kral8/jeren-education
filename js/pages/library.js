@@ -1,76 +1,144 @@
 import { t } from '../i18n/index.js';
-import { searchMaterials, toggleFavorite, isFavorite } from '../services/library.service.js';
+import {
+  loadIndex,
+  searchBooks,
+  toggleFavorite,
+  isFavorite,
+} from '../services/library.service.js';
 
 const basePath = document.body.dataset.base || '../';
+const DEBOUNCE_MS = 300;
+let debounceTimer = null;
 
-const CATEGORIES = [
-  'all', 'russian', 'literature', 'pedagogy', 'methodology',
-  'materials', 'coursework', 'notes', 'presentations', 'tests', 'recommendations',
-];
+function el(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text != null) node.textContent = text;
+  return node;
+}
 
-export async function init() {
-  const grid = document.getElementById('library-grid');
-  const searchInput = document.getElementById('library-search');
-  const filtersEl = document.getElementById('library-filters');
-  if (!grid) return;
+function renderPremiumCover(book) {
+  const cover = el('div', 'book-card__cover book-card__cover--premium');
 
-  let activeCategory = 'all';
-
-  filtersEl.innerHTML = CATEGORIES.map((cat) =>
-    `<button class="filter-btn${cat === 'all' ? ' filter-btn--active' : ''}" data-cat="${cat}">
-      ${cat === 'all' ? t('library.allCategories') : t(`library.categories.${cat}`)}
-    </button>`
-  ).join('');
-
-  filtersEl.addEventListener('click', (e) => {
-    const btn = e.target.closest('.filter-btn');
-    if (!btn) return;
-    activeCategory = btn.dataset.cat;
-    filtersEl.querySelectorAll('.filter-btn').forEach((b) =>
-      b.classList.toggle('filter-btn--active', b === btn)
-    );
-    render(searchInput.value, activeCategory);
-  });
-
-  searchInput?.addEventListener('input', () => render(searchInput.value, activeCategory));
-
-  async function render(query, category) {
-    const items = await searchMaterials(query, category, basePath);
-    if (!items.length) {
-      grid.innerHTML = `<div class="empty-state" data-i18n="library.noResults">${t('library.noResults')}</div>`;
-      return;
-    }
-    grid.innerHTML = items.map((item) => {
-      const fav = isFavorite(item.id);
-      const catLabel = t(`library.categories.${item.category}`);
-      return `
-        <article class="card card--interactive">
-          <div class="card__header">
-            <span class="badge badge--gold">${catLabel}</span>
-            <h3 class="card__title">${item.title}</h3>
-            <p class="card__subtitle">${item.author} · ${item.year}</p>
-          </div>
-          <div class="card__body">${item.description}</div>
-          <div class="card__footer">
-            <button class="btn btn--ghost btn--sm fav-btn" data-id="${item.id}">
-              ${fav ? t('library.removeFavorite') : t('library.addFavorite')}
-            </button>
-            <span class="badge badge--muted">${item.type.toUpperCase()}</span>
-          </div>
-        </article>`;
-    }).join('');
-
-    grid.querySelectorAll('.fav-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        toggleFavorite(btn.dataset.id);
-        render(query, category);
-      });
-    });
+  if (book.cover) {
+    const img = document.createElement('img');
+    img.className = 'book-card__cover-img';
+    img.src = `${basePath}data/library/${book.cover}`;
+    img.alt = book.title;
+    img.loading = 'lazy';
+    cover.appendChild(img);
+    return cover;
   }
 
-  window.addEventListener('langchange', () => render(searchInput?.value || '', activeCategory));
+  const inner = el('div', 'book-card__cover-inner');
+  inner.appendChild(el('div', 'book-card__cover-brand', 'JEREN'));
+  inner.appendChild(el('div', 'book-card__cover-brand-sub', 'EDUCATION'));
+  inner.appendChild(el('div', 'book-card__cover-title', book.title));
+  if (book.author) inner.appendChild(el('div', 'book-card__cover-author', book.author));
+  cover.appendChild(inner);
+  return cover;
+}
 
-  await render('', 'all');
+function renderBookCard(book) {
+  const card = el('article', 'book-card card card--interactive');
+  card.tabIndex = 0;
+
+  card.appendChild(renderPremiumCover(book));
+
+  const body = el('div', 'book-card__body');
+  body.appendChild(el('h3', 'book-card__title', book.title));
+
+  if (book.author) {
+    body.appendChild(el('p', 'book-card__author', book.author));
+  }
+
+  if (book.description) {
+    body.appendChild(el('p', 'book-card__desc', book.description));
+  }
+
+  const footer = el('div', 'book-card__footer');
+  const readBtn = el('a', 'btn btn--primary btn--full', t('library.readBook'));
+  readBtn.href = `reader.html?book=${encodeURIComponent(book.id)}`;
+  footer.appendChild(readBtn);
+
+  const favBtn = el('button', 'btn btn--ghost btn--sm fav-btn', isFavorite(book.id) ? '♥' : '♡');
+  favBtn.type = 'button';
+  favBtn.setAttribute('aria-label', isFavorite(book.id) ? t('library.removeFavorite') : t('library.addFavorite'));
+  favBtn.dataset.id = book.id;
+  footer.appendChild(favBtn);
+
+  card.appendChild(body);
+  card.appendChild(footer);
+
+  card.addEventListener('click', (e) => {
+    if (e.target.closest('.fav-btn')) return;
+    if (e.target.closest('a')) return;
+    readBtn.click();
+  });
+
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') readBtn.click();
+  });
+
+  favBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleFavorite(book.id);
+    render();
+  });
+
+  return card;
+}
+
+async function render() {
+  const grid = document.getElementById('library-grid');
+  const searchInput = document.getElementById('library-search');
+  if (!grid) return;
+
+  grid.replaceChildren(el('div', 'empty-state', t('common.loading')));
+
+  try {
+    const books = await searchBooks(searchInput?.value || '', 'all', basePath);
+    grid.replaceChildren();
+
+    if (!books.length) {
+      grid.appendChild(el('div', 'empty-state', t('library.noResults')));
+      return;
+    }
+
+    books.forEach((book) => grid.appendChild(renderBookCard(book)));
+  } catch (err) {
+    grid.replaceChildren(el('div', 'empty-state', t('common.error')));
+    console.error(err);
+  }
+}
+
+function scheduleRender() {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(render, DEBOUNCE_MS);
+}
+
+export async function init() {
+  const searchInput = document.getElementById('library-search');
+  if (!searchInput) return;
+
+  try {
+    await loadIndex(basePath);
+  } catch (err) {
+    console.error(err);
+    document.getElementById('library-grid')?.replaceChildren(el('div', 'empty-state', t('common.error')));
+    return;
+  }
+
+  searchInput.addEventListener('input', scheduleRender);
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      clearTimeout(debounceTimer);
+      render();
+    }
+  });
+
+  window.addEventListener('langchange', render);
+  await render();
 }
 
 init();

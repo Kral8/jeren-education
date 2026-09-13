@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "generatedFrom": "../словари/Книги-библиотека (source archive, read-only)",
+  "totalBooks": 4,
+  "totalSize": 4780164,
+  "books": [
+    {
+      "id": "volshebnyy-spravochnik",
+      "title": "Волшебный справочник",
+      "author": "",
+      "format": "rtf",
+      "path": "files/volshebnyy-spravochnik.rtf",
+      "size": 256302,
+      "cover": null,
+      "description": "",
+      "viewableInBrowser": false,
+      "sourceFile": "волшебный справочник .rtf"
+    },
+    {
+      "id": "rozental-govorite-i-pishite",
+      "title": "Говорите и пишите по-русски правильно",
+      "author": "Дитмар Розенталь",
+      "format": "docx",
+      "path": "files/rozental-govorite-i-pishite.docx",
+      "size": 1167702,
+      "cover": null,
+      "description": "",
+      "viewableInBrowser": false,
+      "sourceFile": "Дитмар Розенталь-ГОВОРИТЕ И ПИШИТЕ ПО-РУССКИ ПРАВИЛЬНО.docx"
+    },
+    {
+      "id": "kvashnina-yazykoznanie",
+      "title": "Языкознание в таблицах и схемах",
+      "author": "Е.Н. Квашнина",
+      "format": "doc",
+      "path": "files/kvashnina-yazykoznanie.doc",
+      "size": 561152,
+      "cover": null,
+      "description": "",
+      "viewableInBrowser": false,
+      "sourceFile": "Е.Н. Квашнина. Языкознание в таблицах и схемах.doc"
+    },
+    {
+      "id": "pravila-orfografii-i-punkuacii-2007",
+      "title": "Правила русской орфографии и пунктуации. Полный академический справочник (2007)",
+      "author": "",
+      "format": "doc",
+      "path": "files/pravila-orfografii-i-punkuacii-2007.doc",
+      "size": 2795008,
+      "cover": null,
+      "description": "",
+      "viewableInBrowser": false,
+      "sourceFile": "Правила русской орфографии и пунктуации. Полный академический справочник_2007 -480с.doc"
+    }
+  ]
+}
