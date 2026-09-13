@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ударение — JEREN EDUCATION</title>
+  <meta name="description" content="Тренажёр ударений — JEREN EDUCATION">
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body data-subpage="true" data-page="stress" data-base="../">
+  <div class="page-wrapper">
+    <div id="site-header"></div>
+    <main>
+      <div class="page-header container">
+        <h1 class="page-header__title" data-i18n="stress.title">Ударение</h1>
+        <p class="page-header__subtitle" data-i18n="stress.subtitle">Тренажёр правильного ударения в словах русского языка.</p>
+      </div>
+      <section class="section container" style="max-width:640px;margin-inline:auto;">
+        <div class="flex flex--center flex--gap-sm" style="margin-bottom:var(--space-8);">
+          <button class="btn btn--secondary btn--sm" id="stress-mode-training" data-i18n="stress.training">Тренировка</button>
+          <button class="btn btn--ghost btn--sm" id="stress-mode-test" data-i18n="stress.test">Тест</button>
+        </div>
+        <div class="stress-stats" id="stress-stats"></div>
+        <div class="stress-word" id="stress-word">...</div>
+        <div class="stress-options" id="stress-options"></div>
+        <div class="stress-feedback" id="stress-feedback"></div>
+        <div style="text-align:center;">
+          <button class="btn btn--primary" id="stress-next" hidden data-i18n="stress.next">Следующее слово</button>
+        </div>
+      </section>
+    </main>
+    <div id="site-footer"></div>
+  </div>
+  <script type="module" src="../js/app.js"></script>
+  <script type="module" src="../js/pages/stress.js"></script>
+</body>
+</html>

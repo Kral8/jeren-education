@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Курсовые работы — JEREN EDUCATION</title>
+  <meta name="description" content="Конструктор курсовых работ — JEREN EDUCATION">
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body data-subpage="true" data-page="coursework" data-base="../">
+  <div class="page-wrapper">
+    <div id="site-header"></div>
+    <main>
+      <div class="page-header container">
+        <h1 class="page-header__title" data-i18n="coursework.title">Курсовые работы</h1>
+        <p class="page-header__subtitle" data-i18n="coursework.subtitle">Конструктор структуры и плана курсовой работы.</p>
+      </div>
+      <section class="section container">
+        <form id="coursework-form" class="coursework-form card card--elevated">
+          <div class="form-group">
+            <label class="form-label" for="cw-topic" data-i18n="coursework.topic">Тема работы</label>
+            <input type="text" class="form-input" id="cw-topic" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cw-subject" data-i18n="coursework.subject">Предмет</label>
+            <select class="form-select" id="cw-subject">
+              <option value="russian" data-i18n="coursework.subjects.russian">Русский язык</option>
+              <option value="literature" data-i18n="coursework.subjects.literature">Литература</option>
+              <option value="pedagogy" data-i18n="coursework.subjects.pedagogy">Педагогика</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cw-type" data-i18n="coursework.type">Тип работы</label>
+            <select class="form-select" id="cw-type">
+              <option value="course" data-i18n="coursework.types.course">Курсовая работа</option>
+              <option value="project" data-i18n="coursework.types.project">Проект</option>
+              <option value="research" data-i18n="coursework.types.research">Исследовательская работа</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cw-requirements" data-i18n="coursework.requirements">Требования</label>
+            <textarea class="form-textarea" id="cw-requirements" rows="3"></textarea>
+          </div>
+          <button type="submit" class="btn btn--primary" data-i18n="coursework.generate">Сформировать структуру</button>
+        </form>
+        <p class="demo-note" data-i18n="coursework.bibNote">AI не выдумывает источники. Добавляйте проверенные источники самостоятельно.</p>
+        <h2 style="margin-bottom:var(--space-6);" data-i18n="coursework.sections">Разделы работы</h2>
+        <div class="coursework-sections" id="coursework-sections"></div>
+      </section>
+    </main>
+    <div id="site-footer"></div>
+  </div>
+  <script type="module" src="../js/app.js"></script>
+  <script type="module" src="../js/pages/coursework.js"></script>
+</body>
+</html>
