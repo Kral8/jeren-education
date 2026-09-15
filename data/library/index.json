@@ -12,8 +12,9 @@
       "path": "files/volshebnyy-spravochnik.rtf",
       "size": 256302,
       "cover": null,
-      "description": "",
-      "viewableInBrowser": false,
+      "coverUrl": "assets/covers/volshebnyy-spravochnik.svg",
+      "description": "Справочник для школьников по русскому языку.",
+      "viewableInBrowser": true,
       "sourceFile": "волшебный справочник .rtf"
     },
     {
@@ -24,8 +25,9 @@
       "path": "files/rozental-govorite-i-pishite.docx",
       "size": 1167702,
       "cover": null,
-      "description": "",
-      "viewableInBrowser": false,
+      "coverUrl": "assets/covers/rozental-govorite-i-pishite.svg",
+      "description": "Справочник по русскому языку для всех, кто хочет говорить и писать без ошибок.",
+      "viewableInBrowser": true,
       "sourceFile": "Дитмар Розенталь-ГОВОРИТЕ И ПИШИТЕ ПО-РУССКИ ПРАВИЛЬНО.docx"
     },
     {
@@ -36,8 +38,9 @@
       "path": "files/kvashnina-yazykoznanie.doc",
       "size": 561152,
       "cover": null,
-      "description": "",
-      "viewableInBrowser": false,
+      "coverUrl": "assets/covers/kvashnina-yazykoznanie.svg",
+      "description": "Наглядное пособие по языкознанию для учителей и студентов.",
+      "viewableInBrowser": true,
       "sourceFile": "Е.Н. Квашнина. Языкознание в таблицах и схемах.doc"
     },
     {
@@ -48,8 +51,9 @@
       "path": "files/pravila-orfografii-i-punkuacii-2007.doc",
       "size": 2795008,
       "cover": null,
-      "description": "",
-      "viewableInBrowser": false,
+      "coverUrl": "assets/covers/pravila-orfografii-i-punkuacii-2007.svg",
+      "description": "Академический справочник по орфографии и пунктуации русского языка.",
+      "viewableInBrowser": true,
       "sourceFile": "Правила русской орфографии и пунктуации. Полный академический справочник_2007 -480с.doc"
     }
   ]

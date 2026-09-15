@@ -1,6 +1,6 @@
 import { t } from '../i18n/index.js';
 import { renderLanguageSwitcher } from './language-switcher.js';
-import { getUser, getRole, isAuthenticated } from '../services/auth.service.js';
+import { getRole, isAuthenticated, logout } from '../services/auth.service.js';
 
 const NAV_PUBLIC = [
   { key: 'nav.home', file: 'index.html', page: 'home' },
@@ -8,6 +8,7 @@ const NAV_PUBLIC = [
   { key: 'nav.checkWork', file: 'check-work.html', page: 'check-work' },
   { key: 'nav.library', file: 'library.html', page: 'library' },
   { key: 'nav.dictionaries', file: 'dictionaries.html', page: 'dictionaries' },
+  { key: 'nav.tests', file: 'tests.html', page: 'tests' },
 ];
 
 const NAV_EXTRA = [
@@ -40,13 +41,24 @@ function renderNavLinks(isSubpage, activePage, className) {
   }).join('');
 }
 
+function renderAuthButton(isSubpage) {
+  const loginUrl = resolveHref('login.html', isSubpage);
+  if (isAuthenticated()) {
+    return `<button class="btn btn--secondary btn--sm header__login" id="header-logout" type="button" data-i18n="nav.logout">${t('nav.logout')}</button>`;
+  }
+  return `<a href="${loginUrl}" class="btn btn--secondary btn--sm header__login" data-i18n="nav.login">${t('nav.login')}</a>`;
+}
+
+function renderMobileAuthButton(isSubpage) {
+  const loginUrl = resolveHref('login.html', isSubpage);
+  if (isAuthenticated()) {
+    return `<button class="btn btn--primary btn--full" id="mobile-logout" type="button" data-i18n="nav.logout">${t('nav.logout')}</button>`;
+  }
+  return `<a href="${loginUrl}" class="btn btn--primary btn--full" data-i18n="nav.login">${t('nav.login')}</a>`;
+}
+
 export function renderHeader(isSubpage = false, activePage = '') {
   const homeUrl = resolveHref('index.html', isSubpage);
-  const loginUrl = resolveHref('login.html', isSubpage);
-  const user = getUser();
-  const loginLabel = user?.displayName
-    ? user.displayName.split(' ')[0]
-    : t('nav.login');
 
   return `
     <header class="header" role="banner">
@@ -58,7 +70,7 @@ export function renderHeader(isSubpage = false, activePage = '') {
         <nav class="header__nav" aria-label="Main navigation">${renderNavLinks(isSubpage, activePage, 'header__nav-link')}</nav>
         <div class="header__actions">
           ${renderLanguageSwitcher()}
-          <a href="${loginUrl}" class="btn btn--secondary btn--sm header__login" data-i18n="nav.login">${loginLabel}</a>
+          ${renderAuthButton(isSubpage)}
           <button class="header__menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="mobile-nav">
             <span class="header__menu-toggle-line"></span>
             <span class="header__menu-toggle-line"></span>
@@ -73,11 +85,20 @@ export function renderHeader(isSubpage = false, activePage = '') {
         ${renderNavLinks(isSubpage, activePage, 'mobile-nav__link')}
         <hr class="mobile-nav__divider">
         <div class="mobile-nav__footer">
-          <a href="${loginUrl}" class="btn btn--primary btn--full">${loginLabel}</a>
+          ${renderMobileAuthButton(isSubpage)}
         </div>
       </nav>
     </div>
   `;
+}
+
+export function initHeaderAuth() {
+  const handler = async (e) => {
+    e.preventDefault();
+    await logout();
+  };
+  document.getElementById('header-logout')?.addEventListener('click', handler);
+  document.getElementById('mobile-logout')?.addEventListener('click', handler);
 }
 
 export function initMobileNav() {
@@ -105,8 +126,9 @@ export function initMobileNav() {
   });
 
   backdrop?.addEventListener('click', closeMenu);
-  mobileNav.querySelectorAll('.mobile-nav__link, .mobile-nav__footer a').forEach((link) => {
+  mobileNav.querySelectorAll('.mobile-nav__link').forEach((link) => {
     link.addEventListener('click', closeMenu);
   });
+  mobileNav.querySelector('.mobile-nav__footer a')?.addEventListener('click', closeMenu);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
 }

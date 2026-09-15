@@ -17,25 +17,44 @@ function el(tag, className, text) {
   return node;
 }
 
-function renderPremiumCover(book) {
-  const cover = el('div', 'book-card__cover book-card__cover--premium');
-
-  if (book.cover) {
-    const img = document.createElement('img');
-    img.className = 'book-card__cover-img';
-    img.src = `${basePath}data/library/${book.cover}`;
-    img.alt = book.title;
-    img.loading = 'lazy';
-    cover.appendChild(img);
-    return cover;
-  }
-
+function renderPremiumCoverFallback(cover, book) {
   const inner = el('div', 'book-card__cover-inner');
   inner.appendChild(el('div', 'book-card__cover-brand', 'JEREN'));
   inner.appendChild(el('div', 'book-card__cover-brand-sub', 'EDUCATION'));
   inner.appendChild(el('div', 'book-card__cover-title', book.title));
   if (book.author) inner.appendChild(el('div', 'book-card__cover-author', book.author));
   cover.appendChild(inner);
+}
+
+function resolveCoverSrc(book) {
+  if (book.coverUrl) {
+    if (/^https?:\/\//i.test(book.coverUrl)) return book.coverUrl;
+    return `${basePath}${book.coverUrl.replace(/^\//, '')}`;
+  }
+  if (book.cover) return `${basePath}data/library/${book.cover}`;
+  return null;
+}
+
+function renderPremiumCover(book) {
+  const cover = el('div', 'book-card__cover book-card__cover--premium');
+  const src = resolveCoverSrc(book);
+
+  if (src) {
+    const img = document.createElement('img');
+    img.className = 'book-card__cover-img';
+    img.src = src;
+    img.alt = book.title;
+    img.loading = 'lazy';
+    img.referrerPolicy = 'no-referrer';
+    img.addEventListener('error', () => {
+      img.remove();
+      renderPremiumCoverFallback(cover, book);
+    });
+    cover.appendChild(img);
+    return cover;
+  }
+
+  renderPremiumCoverFallback(cover, book);
   return cover;
 }
 

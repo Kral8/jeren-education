@@ -4,13 +4,14 @@ import {
   getFontSizeIndex,
   setFontSizeIndex,
   getFontSizePx,
+  FONT_SIZES,
   getProgress,
   saveProgress,
   setLastBookId,
 } from '../services/reader-storage.js';
 
 const basePath = document.body.dataset.base || '../';
-const FONT_LABELS = ['89%', '100%', '111%', '128%'];
+const FONT_LABELS = ['89%', '100%', '111%', '133%', '156%'];
 
 function getBookId() {
   const id = new URLSearchParams(window.location.search).get('book');
@@ -19,10 +20,12 @@ function getBookId() {
 }
 
 function applyFontSize(index) {
-  const px = getFontSizePx();
-  document.documentElement.style.setProperty('--reader-font-size', `${px}px`);
+  const clamped = Math.max(0, Math.min(FONT_SIZES.length - 1, index));
+  const px = FONT_SIZES[clamped];
+  const root = document.getElementById('je-reader');
+  if (root) root.style.setProperty('--reader-font-size', `${px}px`);
   const label = document.getElementById('font-value');
-  if (label) label.textContent = FONT_LABELS[index] || '100%';
+  if (label) label.textContent = FONT_LABELS[clamped] || '100%';
 }
 
 function updateProgress(scrollEl) {
@@ -70,8 +73,7 @@ async function init() {
 
   document.addEventListener('keydown', blockCopyShortcuts);
 
-  let savedProgress = getProgress(bookId);
-  let progressRestored = false;
+  const savedProgress = getProgress(bookId);
 
   scrollEl.addEventListener('scroll', () => {
     const ratio = updateProgress(scrollEl);
@@ -84,26 +86,23 @@ async function init() {
     document.title = `${doc.book.title} — JEREN EDUCATION`;
 
     mountReader(doc, { contentEl, tocEl, scrollEl });
+    applyFontSize(getFontSizeIndex());
 
-    if (savedProgress > 0.05 && savedProgress < 0.95 && resumeEl) {
-      resumeEl.hidden = false;
-      progressRestored = true;
-      document.getElementById('reader-resume-btn')?.addEventListener('click', () => {
+    requestAnimationFrame(() => {
+      if (savedProgress > 0.05 && savedProgress < 0.95 && resumeEl) {
+        resumeEl.hidden = false;
+        document.getElementById('reader-resume-btn')?.addEventListener('click', () => {
+          const max = scrollEl.scrollHeight - scrollEl.clientHeight;
+          scrollEl.scrollTop = max * savedProgress;
+          resumeEl.hidden = true;
+          updateProgress(scrollEl);
+        });
+      } else if (savedProgress > 0.02) {
         const max = scrollEl.scrollHeight - scrollEl.clientHeight;
         scrollEl.scrollTop = max * savedProgress;
-        resumeEl.hidden = true;
-        updateProgress(scrollEl);
-      });
-    } else if (savedProgress > 0.02) {
-      requestAnimationFrame(() => {
-        const max = scrollEl.scrollHeight - scrollEl.clientHeight;
-        scrollEl.scrollTop = max * savedProgress;
-        updateProgress(scrollEl);
-      });
-      progressRestored = true;
-    } else {
-      requestAnimationFrame(() => updateProgress(scrollEl));
-    }
+      }
+      updateProgress(scrollEl);
+    });
   } catch (err) {
     contentEl.replaceChildren();
     const msg = document.createElement('p');

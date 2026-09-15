@@ -2,11 +2,12 @@
    JEREN EDUCATION — Page-specific styles
    ========================================================================== */
 
-/* Hero — editorial centered */
+/* Hero — luxury editorial */
 .hero {
   position: relative;
-  padding-block: var(--space-32) var(--space-20);
+  padding-block: clamp(var(--space-20), 8vw, var(--space-32)) clamp(var(--space-12), 5vw, var(--space-24));
   overflow: hidden;
+  background: var(--gradient-hero-mesh);
 }
 
 .hero::before {
@@ -66,12 +67,29 @@
   animation: shimmerGold 8s linear infinite;
 }
 
+.hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  margin-bottom: var(--space-8);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-widest);
+  text-transform: uppercase;
+  color: var(--color-brand-light);
+  background: rgba(212, 175, 106, 0.08);
+  border: 1px solid rgba(212, 175, 106, 0.28);
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(8px);
+}
+
 .hero__headline {
-  font-family: var(--font-family-heading);
-  font-size: clamp(2rem, 5.5vw, var(--font-size-4xl));
-  font-weight: var(--font-weight-bold);
+  font-family: var(--font-family-display);
+  font-size: clamp(2.25rem, 6.5vw, var(--font-size-5xl));
+  font-weight: var(--font-weight-semibold);
   letter-spacing: var(--letter-spacing-tight);
-  line-height: var(--line-height-tight);
+  line-height: 1.08;
   color: var(--color-text-primary);
   margin-bottom: var(--space-6);
   text-wrap: balance;
@@ -233,16 +251,26 @@
   padding-block: var(--space-24) var(--space-32);
 }
 
+.aria-promo__grid--single {
+  grid-template-columns: 1fr;
+  text-align: center;
+}
+
+.aria-promo__grid--single .aria-promo__desc {
+  margin-inline: auto;
+  max-width: 640px;
+}
+
 .aria-promo__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-12);
   align-items: center;
-  padding: var(--space-10);
+  padding: clamp(var(--space-8), 4vw, var(--space-12));
   border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-xl);
-  background: linear-gradient(160deg, var(--color-bg-secondary), var(--color-bg-surface));
-  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-2xl);
+  background: linear-gradient(155deg, rgba(15, 40, 33, 0.95), rgba(6, 22, 18, 0.98));
+  box-shadow: var(--shadow-luxury);
   transition:
     border-color 0.5s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1),
@@ -256,7 +284,7 @@
 }
 
 .aria-promo__title {
-  font-family: var(--font-family-heading);
+  font-family: var(--font-family-display);
   font-size: var(--font-size-2xl);
   color: var(--color-text-primary);
   margin-bottom: var(--space-4);
@@ -314,12 +342,13 @@
   flex-direction: column;
   gap: var(--space-4);
   padding: var(--space-8) var(--space-6);
-  background: var(--color-bg-surface);
+  background: linear-gradient(160deg, rgba(15, 40, 33, 0.9) 0%, rgba(6, 22, 18, 0.95) 100%);
   border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   text-decoration: none;
   color: inherit;
-  box-shadow: var(--shadow-subtle), var(--shadow-inner-emerald);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
   transition:
     border-color 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1),
@@ -373,8 +402,8 @@
 }
 
 .feature-card__title {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-lg);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
 }
@@ -403,22 +432,30 @@
 .stats {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-8);
+  gap: var(--space-10);
   justify-content: center;
   padding-block: var(--space-16);
   border-block: 1px solid var(--color-border-default);
+  background: linear-gradient(180deg, transparent, rgba(212, 175, 106, 0.03), transparent);
 }
 
 .stat {
   text-align: center;
-  min-width: 120px;
+  min-width: 140px;
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--color-border-subtle);
 }
 
 .stat__value {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-brand-primary);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-semibold);
+  background: var(--gradient-gold-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   animation: glowPulse 4s ease-in-out infinite;
 }
 
@@ -545,8 +582,62 @@
 .test-setup,
 .test-active,
 .test-result {
-  max-width: 720px;
+  max-width: 880px;
   margin-inline: auto;
+}
+
+.test-actions {
+  margin-top: var(--space-6);
+  display: flex;
+  gap: var(--space-3);
+}
+
+.test-feedback {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+}
+
+.test-feedback--ok {
+  background: rgba(76, 175, 125, 0.12);
+  border: 1px solid rgba(76, 175, 125, 0.35);
+  color: #9fdcb8;
+}
+
+.test-feedback--bad {
+  background: rgba(198, 161, 91, 0.1);
+  border: 1px solid rgba(198, 161, 91, 0.35);
+  color: var(--color-brand-light);
+}
+
+.test-option--correct {
+  border-color: rgba(76, 175, 125, 0.65) !important;
+  background: rgba(76, 175, 125, 0.12) !important;
+  color: #d7f2e3 !important;
+}
+
+.test-option--wrong {
+  border-color: rgba(220, 100, 100, 0.55) !important;
+  background: rgba(220, 100, 100, 0.1) !important;
+  color: #f5caca !important;
+}
+
+.test-result-card {
+  text-align: center;
+  padding: var(--space-10);
+}
+
+.test-result-line {
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-3);
+}
+
+.test-result-points {
+  color: var(--color-brand-light);
+  margin-bottom: var(--space-6);
+  font-size: var(--font-size-lg);
 }
 
 .test-timer {
@@ -748,7 +839,11 @@
 
 .aria-section.container {
   width: 100%;
-  max-width: var(--container-max);
+  max-width: min(1280px, 100%);
+}
+
+body[data-page="aria"] .aria-section.container {
+  max-width: min(1320px, calc(100% - var(--space-8)));
 }
 
 .aria-chat {
@@ -756,12 +851,33 @@
   flex-direction: column;
   width: 100%;
   min-width: 0;
-  height: clamp(420px, calc(100dvh - var(--header-height) - 220px), 680px);
-  max-width: min(880px, 100%);
+  height: clamp(520px, calc(100dvh - var(--header-height) - 180px), 820px);
+  max-width: 100%;
   margin-inline: auto;
   padding: 0;
   overflow: hidden;
   border-color: var(--color-border-hover);
+}
+
+body[data-page="aria"] .page-header {
+  padding-bottom: var(--space-4);
+}
+
+body[data-page="aria"] .aria-section {
+  padding-top: 0;
+}
+
+body[data-page="aria"] .aria-chat__messages {
+  padding-inline: var(--space-5);
+}
+
+body[data-page="aria"] .aria-msg--bot {
+  width: 100%;
+  max-width: 100%;
+}
+
+body[data-page="aria"] .aria-msg--user {
+  max-width: min(760px, 82%);
 }
 
 .aria-chat__header {
@@ -818,7 +934,7 @@
   flex-shrink: 0;
   min-height: var(--min-touch-target);
   padding: var(--space-2) var(--space-4);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   background: var(--color-bg-elevated);
   border: 1px solid var(--color-border-default);
@@ -847,11 +963,11 @@
 .aria-msg {
   box-sizing: border-box;
   width: fit-content;
-  max-width: 75%;
+  max-width: min(920px, 94%);
   min-width: 0;
   padding: var(--space-4) var(--space-5);
   border-radius: var(--radius-lg);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
   line-height: var(--line-height-relaxed);
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -866,7 +982,7 @@
   background: var(--color-bg-elevated);
   border: 1px solid var(--color-border-default);
   border-left: 2px solid var(--color-brand-primary);
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
 }
 
 .aria-msg--user {
@@ -882,11 +998,11 @@
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
-  .aria-msg { max-width: 88%; }
+  .aria-msg { max-width: 92%; }
 }
 
 @media (min-width: 1025px) {
-  .aria-msg { max-width: 75%; }
+  .aria-msg { max-width: min(920px, 90%); }
 }
 
 .aria-msg__body,
@@ -1001,9 +1117,10 @@
 .aria-chat__textarea {
   flex: 1;
   min-width: 0;
-  min-height: var(--min-touch-target);
-  max-height: 120px;
+  min-height: 52px;
+  max-height: 160px;
   resize: none;
+  font-size: var(--font-size-base);
   line-height: var(--line-height-normal);
 }
 
@@ -1172,6 +1289,8 @@
   cursor: pointer;
   max-width: 320px;
   margin-inline: auto;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
   transition:
     border-color var(--transition-normal),
     box-shadow var(--transition-normal),
@@ -1235,9 +1354,11 @@
 }
 
 .book-card__cover-img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  background: var(--color-bg-secondary);
 }
 
 .book-card__body {
@@ -1249,8 +1370,8 @@
 }
 
 .book-card__title {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-md);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-snug);
   color: var(--color-text-primary);
@@ -1451,8 +1572,13 @@
   }
 
   .aria-chat {
-    height: clamp(380px, calc(100dvh - var(--header-height) - 160px), 560px);
+    height: clamp(480px, calc(100dvh - var(--header-height) - 120px), 720px);
     border-radius: var(--radius-md);
+  }
+
+  body[data-page="aria"] .aria-msg {
+    font-size: var(--font-size-md);
+    max-width: calc(100% - var(--space-2));
   }
 
   .aria-chat__messages {
@@ -1824,12 +1950,113 @@
   text-align: center;
 }
 
+/* Dictionary catalog — luxury grid */
+.dict-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+
+.dict-stat {
+  flex: 1;
+  min-width: 160px;
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(145deg, var(--color-bg-surface), var(--color-bg-secondary));
+  border: 1px solid var(--color-border-default);
+  text-align: center;
+}
+
+.dict-stat__value {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-3xl);
+  color: var(--color-brand-light);
+  line-height: 1;
+  margin-bottom: var(--space-2);
+}
+
+.dict-stat__label {
+  font-size: var(--font-size-xs);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.dict-catalog {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-5);
+  margin-bottom: var(--space-10);
+}
+
+.dict-catalog-card {
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border-radius: var(--radius-xl);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.dict-catalog-card--active {
+  cursor: pointer;
+}
+
+.dict-catalog-card--active:hover,
+.dict-catalog-card--active.is-selected {
+  border-color: var(--color-border-hover);
+  box-shadow: var(--shadow-gold-glow);
+  transform: translateY(-3px);
+}
+
+.dict-catalog-card--active.is-selected {
+  background: linear-gradient(160deg, rgba(212, 175, 106, 0.1), var(--color-bg-surface));
+}
+
+.dict-catalog-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.dict-catalog-card__title {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-snug);
+}
+
+.dict-catalog-card__desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  line-height: var(--line-height-relaxed);
+}
+
+.dict-catalog-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-3);
+}
+
+.dict-toolbar {
+  padding: var(--space-8);
+  margin-bottom: var(--space-8);
+  border-radius: var(--radius-xl);
+}
+
 @media (max-width: 768px) {
   .admin-form__row {
     grid-template-columns: 1fr;
   }
 
   .check-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .dict-catalog {
     grid-template-columns: 1fr;
   }
 }

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" role="img" aria-label="/7K:>7=0=85 2 B01;8F0E 8 AE5<0E">
+  <defs>
+    <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E3328"/>
+      <stop offset="100%" stop-color="#09231C"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="600" fill="url(#bg3)"/>
+  <rect x="30" y="44" width="340" height="512" rx="8" fill="#132F26" stroke="#C6A15B" stroke-width="3"/>
+  <text x="200" y="120" fill="#C6A15B" font-family="Georgia, serif" font-size="20" font-weight="700" text-anchor="middle">JEREN EDUCATION</text>
+  <text x="200" y="300" fill="#F0EBE3" font-family="Georgia, serif" font-size="24" font-weight="700" text-anchor="middle">
+    <tspan x="200" dy="0">/7K:>7=0=85</tspan>
+    <tspan x="200" dy="34">2 B01;8F0E</tspan>
+    <tspan x="200" dy="34">8 AE5<0E</tspan>
+  </text>
+  <text x="200" y="470" fill="#E0C47A" font-family="Arial, sans-serif" font-size="17" text-anchor="middle">.. 20H=8=0</text>
+</svg>

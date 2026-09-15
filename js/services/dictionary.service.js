@@ -127,7 +127,7 @@ export async function searchDictionary(dictionaryId, query, basePath = '', limit
   const dictionary = getDictionaryById(catalog, dictionaryId);
   if (!dictionary) throw new Error('Dictionary not found');
   if (!dictionary.searchable) {
-    return { results: [], dictionary, query, archive: true };
+    return { results: [], dictionary, query, unavailable: true };
   }
 
   const normalizedQuery = normalizeQuery(query);

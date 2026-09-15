@@ -1,6 +1,6 @@
 import { getItem, setItem } from '../utils/storage.js';
 
-const FONT_SIZES = [16, 18, 20, 23];
+export const FONT_SIZES = [16, 18, 20, 24, 28];
 
 export function getFontSizeIndex() {
   return getItem('reader_font_size_idx', 1);
@@ -12,8 +12,8 @@ export function setFontSizeIndex(idx) {
   return clamped;
 }
 
-export function getFontSizePx() {
-  return FONT_SIZES[getFontSizeIndex()];
+export function getFontSizePx(index = getFontSizeIndex()) {
+  return FONT_SIZES[index] ?? FONT_SIZES[1];
 }
 
 export function getProgress(bookId) {

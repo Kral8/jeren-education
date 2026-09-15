@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" role="img" aria-label="@028;0 @CAA:>9 >@D>3@0D88 8 ?C=:BC0F88">
+  <defs>
+    <linearGradient id="bg4" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#071A15"/>
+      <stop offset="100%" stop-color="#0B2A21"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="600" fill="url(#bg4)"/>
+  <rect x="26" y="38" width="348" height="524" rx="9" fill="#102A21" stroke="#C6A15B" stroke-width="2"/>
+  <text x="200" y="108" fill="#C6A15B" font-family="Georgia, serif" font-size="19" font-weight="700" text-anchor="middle">JEREN EDUCATION</text>
+  <text x="200" y="260" fill="#F0EBE3" font-family="Georgia, serif" font-size="22" font-weight="700" text-anchor="middle">
+    <tspan x="200" dy="0">@028;0 @CAA:>9</tspan>
+    <tspan x="200" dy="30">>@D>3@0D88</tspan>
+    <tspan x="200" dy="30">8 ?C=:BC0F88</tspan>
+  </text>
+  <text x="200" y="400" fill="#C9C2B8" font-family="Arial, sans-serif" font-size="15" text-anchor="middle">:045<8G5A:89 A?@02>G=8:</text>
+  <text x="200" y="430" fill="#8A948C" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">2007</text>
+</svg>

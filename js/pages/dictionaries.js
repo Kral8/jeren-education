@@ -15,6 +15,18 @@ function el(tag, className, text) {
   return node;
 }
 
+function formatCount(count) {
+  if (count == null) return '—';
+  if (count >= 1000) return `${Math.round(count / 1000)}K+`;
+  return String(count);
+}
+
+function getCategoryLabel(dict) {
+  const key = dict.type && t(`dictionaries.categories.${dict.type}`);
+  if (key && !key.startsWith('dictionaries.')) return key;
+  return dict.type || '';
+}
+
 function appendRow(parent, label, value) {
   if (!value) return;
   const row = el('div', 'dict-result__row');
@@ -27,17 +39,13 @@ function renderOzhegovCard(container, entries) {
   entries.forEach((entry, idx) => {
     const card = el('article', 'dict-result card card--elevated');
     if (idx > 0) card.style.marginTop = 'var(--space-4)';
-
-    const word = el('div', 'dict-result__word', entry.word);
-    card.appendChild(word);
-
+    card.appendChild(el('div', 'dict-result__word', entry.word));
     appendRow(card, t('dictionaries.meaning'), entry.meaning);
     appendRow(card, t('dictionaries.grammar'), entry.grammar);
     appendRow(card, t('dictionaries.style'), entry.style);
     appendRow(card, t('dictionaries.pronunciation'), entry.phonetic);
     appendRow(card, t('dictionaries.examples'), entry.examples);
     appendRow(card, t('dictionaries.antonym'), entry.antonym);
-
     container.appendChild(card);
   });
 }
@@ -61,25 +69,19 @@ function renderPhraseologyCard(container, entry) {
   container.appendChild(card);
 }
 
-function renderArchiveNotice(container, dictionary) {
+function renderUnavailableNotice(container) {
   const note = el('div', 'demo-note');
-  note.appendChild(el('span', 'badge badge--muted', t('dictionaries.archive')));
-  note.appendChild(document.createTextNode(' ' + (dictionary.statusNote || t('dictionaries.archiveNote'))));
+  note.appendChild(el('span', 'badge badge--muted', t('dictionaries.comingSoon')));
+  note.appendChild(document.createTextNode(' ' + t('dictionaries.comingSoonNote')));
   container.appendChild(note);
-
-  const link = el('a', 'btn btn--secondary', t('dictionaries.downloadArchive'));
-  link.href = `${basePath}data/dictionaries/${dictionary.data}`;
-  link.download = '';
-  link.style.marginTop = 'var(--space-4)';
-  container.appendChild(link);
 }
 
 function renderResults(data) {
   const container = document.getElementById('dict-result');
   container.replaceChildren();
 
-  if (data.archive) {
-    renderArchiveNotice(container, data.dictionary);
+  if (data.unavailable) {
+    renderUnavailableNotice(container);
     return;
   }
 
@@ -93,13 +95,9 @@ function renderResults(data) {
   container.appendChild(header);
 
   data.results.forEach((result) => {
-    if (result.type === 'ozhegov') {
-      renderOzhegovCard(container, result.entries);
-    } else if (result.type === 'foreign') {
-      renderForeignCard(container, result.entry);
-    } else if (result.type === 'phraseology') {
-      renderPhraseologyCard(container, result.entry);
-    }
+    if (result.type === 'ozhegov') renderOzhegovCard(container, result.entries);
+    else if (result.type === 'foreign') renderForeignCard(container, result.entry);
+    else if (result.type === 'phraseology') renderPhraseologyCard(container, result.entry);
   });
 }
 
@@ -128,32 +126,120 @@ function scheduleSearch() {
   debounceTimer = setTimeout(doSearch, DEBOUNCE_MS);
 }
 
+function getSearchableDictionaries() {
+  return catalog?.dictionaries.filter((d) => d.searchable) || [];
+}
+
+function selectDictionary(id, scrollToSearch = true) {
+  if (!catalog?.dictionaries.some((d) => d.id === id && d.searchable)) return;
+  activeDictionaryId = id;
+  const select = document.getElementById('dict-select');
+  if (select) select.value = id;
+  updateDictionaryInfo();
+  highlightCatalogSelection();
+  if (scrollToSearch) {
+    document.getElementById('dict-search-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('dict-search')?.focus();
+  }
+  doSearch();
+}
+
+function highlightCatalogSelection() {
+  document.querySelectorAll('.dict-catalog-card--active').forEach((card) => {
+    card.classList.toggle('is-selected', card.dataset.id === activeDictionaryId);
+  });
+}
+
+function renderStats() {
+  const statsEl = document.getElementById('dict-stats');
+  if (!statsEl || !catalog) return;
+
+  const searchable = getSearchableDictionaries();
+  const totalEntries = searchable.reduce((sum, d) => sum + (d.entryCount || 0), 0);
+
+  statsEl.replaceChildren();
+  [
+    { value: catalog.totalDictionaries || catalog.dictionaries.length, label: t('dictionaries.statInstalled') },
+    { value: searchable.length, label: t('dictionaries.statSearchable') },
+    { value: formatCount(totalEntries), label: t('dictionaries.statEntries') },
+  ].forEach(({ value, label }) => {
+    const item = el('div', 'dict-stat');
+    item.appendChild(el('div', 'dict-stat__value', String(value)));
+    item.appendChild(el('div', 'dict-stat__label', label));
+    statsEl.appendChild(item);
+  });
+}
+
+function renderCatalog() {
+  const grid = document.getElementById('dict-catalog');
+  if (!grid || !catalog) return;
+
+  grid.replaceChildren();
+  catalog.dictionaries.forEach((dict) => {
+    const isActive = dict.searchable;
+    const card = el('article', `dict-catalog-card card ${isActive ? 'dict-catalog-card--active' : 'dict-catalog-card--archive'}`);
+    card.dataset.id = dict.id;
+
+    const head = el('div', 'dict-catalog-card__head');
+    head.appendChild(el('h3', 'dict-catalog-card__title', dict.title));
+    const badgeClass = isActive ? 'badge badge--gold' : 'badge badge--muted';
+    const badgeText = isActive ? t('dictionaries.statusActive') : t('dictionaries.statusInstalled');
+    head.appendChild(el('span', badgeClass, badgeText));
+    card.appendChild(head);
+
+    card.appendChild(el('p', 'dict-catalog-card__desc', dict.description || ''));
+
+    const meta = el('div', 'dict-catalog-card__meta');
+    const category = getCategoryLabel(dict);
+    if (category) meta.appendChild(el('span', 'badge badge--muted', category));
+    if (dict.entryCount) meta.appendChild(el('span', 'badge badge--muted', `${formatCount(dict.entryCount)} ${t('dictionaries.entriesLabel')}`));
+    if (!isActive) meta.appendChild(el('span', 'badge badge--muted', t('dictionaries.comingSoon')));
+    card.appendChild(meta);
+
+    if (isActive) {
+      card.tabIndex = 0;
+      card.setAttribute('role', 'button');
+      card.addEventListener('click', () => selectDictionary(dict.id));
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectDictionary(dict.id);
+        }
+      });
+    }
+
+    grid.appendChild(card);
+  });
+
+  highlightCatalogSelection();
+}
+
 function populateDictionarySelect() {
   const select = document.getElementById('dict-select');
-  if (!select || !catalog) return;
+  const searchable = getSearchableDictionaries();
+  if (!select || !searchable.length) return;
 
   select.replaceChildren();
-  catalog.dictionaries.forEach((dict) => {
+  searchable.forEach((dict) => {
     const option = el('option');
     option.value = dict.id;
-    option.textContent = `${dict.title} (${dict.searchable ? dict.entryCount : t('dictionaries.archive')})`;
+    option.textContent = `${dict.title} (${formatCount(dict.entryCount)})`;
     if (dict.id === activeDictionaryId) option.selected = true;
     select.appendChild(option);
   });
+
+  if (!searchable.some((d) => d.id === activeDictionaryId)) {
+    activeDictionaryId = searchable[0].id;
+    select.value = activeDictionaryId;
+  }
 }
 
 function updateDictionaryInfo() {
   const info = document.getElementById('dict-info');
-  const dict = catalog?.dictionaries.find((d) => d.id === activeDictionaryId);
+  const dict = getSearchableDictionaries().find((d) => d.id === activeDictionaryId);
   if (!info || !dict) return;
   info.replaceChildren();
   info.appendChild(el('p', 'text-small text-muted', dict.description));
-  if (!dict.searchable) {
-    const badge = el('span', 'badge badge--warning');
-    badge.textContent = t('dictionaries.searchUnavailable');
-    badge.style.marginTop = 'var(--space-2)';
-    info.appendChild(badge);
-  }
 }
 
 export async function init() {
@@ -163,19 +249,20 @@ export async function init() {
 
   try {
     catalog = await loadCatalog(basePath);
+    renderStats();
+    renderCatalog();
     populateDictionarySelect();
     updateDictionaryInfo();
   } catch (err) {
     console.error(err);
-    document.getElementById('dict-result')?.replaceChildren(
-      el('div', 'empty-state', t('common.error'))
-    );
+    document.getElementById('dict-result')?.replaceChildren(el('div', 'empty-state', t('common.error')));
     return;
   }
 
   select?.addEventListener('change', () => {
     activeDictionaryId = select.value;
     updateDictionaryInfo();
+    highlightCatalogSelection();
     doSearch();
   });
 
@@ -192,6 +279,8 @@ export async function init() {
   });
 
   window.addEventListener('langchange', () => {
+    renderStats();
+    renderCatalog();
     populateDictionarySelect();
     updateDictionaryInfo();
   });

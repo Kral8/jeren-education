@@ -1,259 +1,218 @@
 /* ==========================================================================
-   JEREN EDUCATION — Design System Variables
-   DARK EMERALD × MATTE GOLD
+   JEREN EDUCATION — Design System
+   OBSIDIAN EMERALD × CHAMPAGNE GOLD — Luxury Edition
    Created by Jeren Gulmyradowa
    ========================================================================== */
 
 :root {
 
-  /* --------------------------------------------------------------------------
-     Colors — Background (Dark Emerald)
-     -------------------------------------------------------------------------- */
+  /* Backgrounds — deep obsidian emerald */
+  --color-emerald-deep:      #030A08;
+  --color-emerald-base:      #051410;
+  --color-emerald-mid:       #081A15;
+  --color-emerald-rich:      #0C241D;
 
-  --color-emerald-deep:      #071A15;
-  --color-emerald-base:      #09231C;
-  --color-emerald-mid:       #0B2A21;
-  --color-emerald-rich:      #0E3328;
+  --color-bg-primary:        #030A08;
+  --color-bg-secondary:      #061612;
+  --color-bg-surface:        #0A1F19;
+  --color-bg-elevated:       #0F2821;
+  --color-bg-glass:          rgba(6, 22, 18, 0.78);
 
-  --color-bg-primary:        #071A15;
-  --color-bg-secondary:      #0C211A;
-  --color-bg-surface:        #102A21;
-  --color-bg-elevated:       #132F26;
-  --color-bg-glass:          rgba(12, 33, 26, 0.72);
+  /* Text — warm ivory & champagne */
+  --color-text-primary:      #FAF7F2;
+  --color-text-secondary:    #C4BCB0;
+  --color-text-muted:        #8A928A;
+  --color-text-disabled:     #565E58;
 
+  /* Brand — champagne gold */
+  --color-brand-primary:     #D4AF6A;
+  --color-brand-light:       #F0D78C;
+  --color-brand-dark:        #9A7840;
+  --color-brand-glow:        rgba(212, 175, 106, 0.18);
+  --color-brand-subtle:      rgba(212, 175, 106, 0.09);
 
-  /* --------------------------------------------------------------------------
-     Colors — Text (Warm Ivory)
-     -------------------------------------------------------------------------- */
+  /* Borders */
+  --color-border-default:    rgba(212, 175, 106, 0.16);
+  --color-border-glass:      rgba(212, 175, 106, 0.24);
+  --color-border-hover:      rgba(240, 215, 140, 0.52);
+  --color-border-subtle:     rgba(255, 255, 255, 0.05);
 
-  --color-text-primary:      #F0EBE3;
-  --color-text-secondary:    #C9C2B8;
-  --color-text-muted:        #8A948C;
-  --color-text-disabled:     #5C6660;
+  /* Status */
+  --color-status-success:    #6ECF9A;
+  --color-status-warning:    #E0B85C;
+  --color-status-error:      #D48484;
+  --color-status-info:       #7EB0DC;
 
-
-  /* --------------------------------------------------------------------------
-     Colors — Brand (Matte Gold)
-     -------------------------------------------------------------------------- */
-
-  --color-brand-primary:     #C6A15B;
-  --color-brand-light:       #E0C47A;
-  --color-brand-dark:        #8C6A32;
-  --color-brand-glow:        rgba(198, 161, 91, 0.14);
-  --color-brand-subtle:      rgba(198, 161, 91, 0.08);
-
-
-  /* --------------------------------------------------------------------------
-     Colors — Borders
-     -------------------------------------------------------------------------- */
-
-  --color-border-default:    rgba(198, 161, 91, 0.18);
-  --color-border-glass:      rgba(198, 161, 91, 0.22);
-  --color-border-hover:      rgba(224, 196, 122, 0.45);
-  --color-border-subtle:     rgba(255, 255, 255, 0.06);
-
-
-  /* --------------------------------------------------------------------------
-     Colors — Status
-     -------------------------------------------------------------------------- */
-
-  --color-status-success:    #6BAF8D;
-  --color-status-warning:    #D4A853;
-  --color-status-error:      #C97070;
-  --color-status-info:       #7A9EC9;
-
-
-  /* --------------------------------------------------------------------------
-     Typography
-     -------------------------------------------------------------------------- */
-
-  --font-family-base:        'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --font-family-heading:     'Plus Jakarta Sans', 'Inter', 'Segoe UI', system-ui, sans-serif;
+  /* Typography */
+  --font-family-base:        'Outfit', 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-family-heading:     'Cormorant Garamond', 'Georgia', 'Times New Roman', serif;
+  --font-family-display:     'Cormorant Garamond', 'Georgia', serif;
 
   --font-size-xs:            0.75rem;
   --font-size-sm:            0.875rem;
   --font-size-base:          1rem;
   --font-size-md:            1.125rem;
-  --font-size-lg:            1.25rem;
-  --font-size-xl:            1.5rem;
-  --font-size-2xl:           1.875rem;
-  --font-size-3xl:           2.25rem;
-  --font-size-4xl:           3rem;
-  --font-size-5xl:           3.75rem;
-  --font-size-6xl:           4.5rem;
+  --font-size-lg:            1.3125rem;
+  --font-size-xl:            1.5625rem;
+  --font-size-2xl:           2rem;
+  --font-size-3xl:           2.625rem;
+  --font-size-4xl:           3.375rem;
+  --font-size-5xl:           4.25rem;
+  --font-size-6xl:           5rem;
 
-  --line-height-tight:       1.2;
-  --line-height-snug:        1.35;
-  --line-height-normal:      1.5;
-  --line-height-relaxed:     1.65;
-  --line-height-loose:       1.8;
+  --line-height-tight:       1.15;
+  --line-height-snug:        1.3;
+  --line-height-normal:      1.55;
+  --line-height-relaxed:     1.7;
+  --line-height-loose:       1.85;
 
   --font-weight-regular:     400;
   --font-weight-medium:      500;
   --font-weight-semibold:    600;
   --font-weight-bold:        700;
 
-  --letter-spacing-tight:    -0.02em;
+  --letter-spacing-tight:    -0.025em;
   --letter-spacing-normal:   0;
-  --letter-spacing-wide:     0.04em;
-  --letter-spacing-wider:    0.08em;
-  --letter-spacing-widest:   0.14em;
+  --letter-spacing-wide:     0.05em;
+  --letter-spacing-wider:    0.1em;
+  --letter-spacing-widest:   0.16em;
 
+  /* Spacing */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
 
-  /* --------------------------------------------------------------------------
-     Spacing
-     -------------------------------------------------------------------------- */
+  /* Radius — softer luxury curves */
+  --radius-sm:   0.5rem;
+  --radius-md:   0.75rem;
+  --radius-lg:   1.125rem;
+  --radius-xl:   1.75rem;
+  --radius-2xl:  2.25rem;
+  --radius-pill: 9999px;
 
-  --space-1:                 0.25rem;
-  --space-2:                 0.5rem;
-  --space-3:                 0.75rem;
-  --space-4:                 1rem;
-  --space-5:                 1.25rem;
-  --space-6:                 1.5rem;
-  --space-8:                 2rem;
-  --space-10:                2.5rem;
-  --space-12:                3rem;
-  --space-16:                4rem;
-  --space-20:                5rem;
-  --space-24:                6rem;
-  --space-32:                8rem;
+  /* Shadows */
+  --shadow-subtle:     0 2px 8px rgba(0, 0, 0, 0.45);
+  --shadow-card:       0 8px 32px rgba(0, 0, 0, 0.5),
+                       0 0 0 1px rgba(212, 175, 106, 0.08);
+  --shadow-elevated:   0 20px 60px rgba(0, 0, 0, 0.55),
+                       0 0 0 1px rgba(212, 175, 106, 0.14);
+  --shadow-gold-glow:  0 0 24px rgba(212, 175, 106, 0.16),
+                       0 0 48px rgba(212, 175, 106, 0.08);
+  --shadow-luxury:     0 24px 80px rgba(0, 0, 0, 0.6),
+                       inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --shadow-inner-emerald: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
+  /* Glass */
+  --glass-bg:     rgba(8, 26, 21, 0.72);
+  --glass-border: rgba(212, 175, 106, 0.22);
+  --glass-blur:   20px;
+  --glass-shadow: 0 8px 40px rgba(0, 0, 0, 0.45);
 
-  /* --------------------------------------------------------------------------
-     Border Radius
-     -------------------------------------------------------------------------- */
+  /* Gradients */
+  --gradient-bg-premium: linear-gradient(
+    168deg,
+    #030A08 0%,
+    #051410 35%,
+    #081A15 65%,
+    #030A08 100%
+  );
 
-  --radius-sm:               0.375rem;
-  --radius-md:               0.625rem;
-  --radius-lg:               1rem;
-  --radius-xl:               1.5rem;
-  --radius-pill:             9999px;
+  --gradient-hero-mesh:
+    radial-gradient(ellipse 90% 70% at 50% -10%, rgba(212, 175, 106, 0.09) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 100% 50%, rgba(12, 36, 29, 0.6) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 0% 80%, rgba(212, 175, 106, 0.04) 0%, transparent 55%);
 
+  --gradient-emerald-glow: radial-gradient(
+    ellipse 80% 60% at 70% 20%,
+    rgba(12, 36, 29, 0.55) 0%,
+    transparent 70%
+  );
 
-  /* --------------------------------------------------------------------------
-     Shadows
-     -------------------------------------------------------------------------- */
+  --gradient-gold-accent: linear-gradient(
+    135deg,
+    #9A7840 0%,
+    #D4AF6A 42%,
+    #F0D78C 78%,
+    #D4AF6A 100%
+  );
 
-  --shadow-subtle:           0 1px 3px rgba(0, 0, 0, 0.35);
-  --shadow-card:             0 4px 24px rgba(0, 0, 0, 0.35),
-                             0 0 0 1px rgba(198, 161, 91, 0.06);
-  --shadow-elevated:         0 12px 40px rgba(0, 0, 0, 0.45),
-                             0 0 0 1px rgba(198, 161, 91, 0.1);
-  --shadow-gold-glow:        0 0 20px rgba(198, 161, 91, 0.12),
-                             0 0 40px rgba(198, 161, 91, 0.06);
-  --shadow-inner-emerald:    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --gradient-gold-shine: linear-gradient(
+    110deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.12) 45%,
+    transparent 55%
+  );
 
+  --gradient-surface: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
 
-  /* --------------------------------------------------------------------------
-     Glassmorphism
-     -------------------------------------------------------------------------- */
+  --gradient-gold-line: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 175, 106, 0.15) 20%,
+    rgba(240, 215, 140, 0.65) 50%,
+    rgba(212, 175, 106, 0.15) 80%,
+    transparent 100%
+  );
 
-  --glass-bg:                rgba(12, 33, 26, 0.65);
-  --glass-border:            rgba(198, 161, 91, 0.2);
-  --glass-blur:              16px;
-  --glass-shadow:            0 4px 24px rgba(0, 0, 0, 0.3);
+  --gradient-card-border: linear-gradient(
+    145deg,
+    rgba(240, 215, 140, 0.35) 0%,
+    rgba(212, 175, 106, 0.08) 40%,
+    transparent 70%
+  );
 
+  /* Transitions */
+  --transition-fast:   180ms cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-normal: 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-slow:   520ms cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* --------------------------------------------------------------------------
-     Gradients
-     -------------------------------------------------------------------------- */
-
-  --gradient-bg-premium:     linear-gradient(
-                               165deg,
-                               #071A15 0%,
-                               #09231C 40%,
-                               #0B2A21 70%,
-                               #071A15 100%
-                             );
-
-  --gradient-emerald-glow:   radial-gradient(
-                               ellipse 80% 60% at 70% 20%,
-                               rgba(14, 51, 40, 0.5) 0%,
-                               transparent 70%
-                             );
-
-  --gradient-gold-accent:    linear-gradient(
-                               135deg,
-                               #8C6A32 0%,
-                               #C6A15B 50%,
-                               #E0C47A 100%
-                             );
-
-  --gradient-surface:        linear-gradient(
-                               180deg,
-                               rgba(255, 255, 255, 0.03) 0%,
-                               rgba(255, 255, 255, 0) 100%
-                             );
-
-  --gradient-gold-line:      linear-gradient(
-                               90deg,
-                               transparent 0%,
-                               rgba(198, 161, 91, 0.5) 50%,
-                               transparent 100%
-                             );
-
-
-  /* --------------------------------------------------------------------------
-     Transitions
-     -------------------------------------------------------------------------- */
-
-  --transition-fast:         150ms ease;
-  --transition-normal:       250ms ease;
-  --transition-slow:         400ms ease;
-
-
-  /* --------------------------------------------------------------------------
-     Layout
-     -------------------------------------------------------------------------- */
-
-  --container-max:           1280px;
+  /* Layout */
+  --container-max:           1360px;
+  --container-wide:          1440px;
   --bp-mobile:               768px;
   --bp-tablet:               1024px;
   --bp-desktop:              1280px;
-  --bp-wide:                 1920px;
-  --container-text:          720px;
-  --container-narrow:        560px;
-  --container-padding:       var(--space-6);
-  --header-height:           72px;
+  --container-text:          760px;
+  --container-narrow:        580px;
+  --container-padding:       var(--space-8);
+  --header-height:           76px;
   --section-spacing:         var(--space-24);
-  --section-spacing-sm:      var(--space-16);
 
+  /* Z-index */
+  --z-base:     0;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-modal:    300;
+  --z-toast:    400;
 
-  /* --------------------------------------------------------------------------
-     Z-index
-     -------------------------------------------------------------------------- */
+  /* Accessibility */
+  --focus-ring-color:  var(--color-brand-light);
+  --focus-ring-width:  2px;
+  --focus-ring-offset: 3px;
+  --focus-ring:        var(--focus-ring-width) solid var(--focus-ring-color);
+  --min-touch-target:  44px;
 
-  --z-base:                  0;
-  --z-dropdown:              100;
-  --z-sticky:                200;
-  --z-modal:                 300;
-  --z-toast:                 400;
-
-
-  /* --------------------------------------------------------------------------
-     Accessibility
-     -------------------------------------------------------------------------- */
-
-  --focus-ring-color:        var(--color-brand-light);
-  --focus-ring-width:        2px;
-  --focus-ring-offset:       2px;
-  --focus-ring:              var(--focus-ring-width) solid var(--focus-ring-color);
-
-  --min-touch-target:        44px;
-
-
-  /* --------------------------------------------------------------------------
-     Responsive overrides
-     -------------------------------------------------------------------------- */
-
-  --container-padding-mobile:  var(--space-4);
-  --header-height-mobile:      64px;
-  --section-spacing-mobile:    var(--space-16);
-  --font-size-hero:            var(--font-size-5xl);
-  --font-size-hero-mobile:     var(--font-size-3xl);
-
+  /* Responsive */
+  --container-padding-mobile: var(--space-4);
+  --header-height-mobile:     68px;
+  --section-spacing-mobile:   var(--space-16);
+  --font-size-hero:           var(--font-size-5xl);
+  --font-size-hero-mobile:    var(--font-size-3xl);
 }
-
 
 @media (prefers-reduced-motion: reduce) {
   :root {
@@ -265,17 +224,17 @@
 
 @media (max-width: 1024px) {
   :root {
-    --container-padding:    var(--space-5);
-    --section-spacing:      var(--space-20);
-    --font-size-hero:       var(--font-size-4xl);
+    --container-padding: var(--space-5);
+    --section-spacing:   var(--space-20);
+    --font-size-hero:    var(--font-size-4xl);
   }
 }
 
 @media (max-width: 768px) {
   :root {
-    --container-padding:    var(--container-padding-mobile);
-    --header-height:        var(--header-height-mobile);
-    --section-spacing:      var(--section-spacing-mobile);
-    --font-size-hero:       var(--font-size-hero-mobile);
+    --container-padding: var(--container-padding-mobile);
+    --header-height:     var(--header-height-mobile);
+    --section-spacing:   var(--section-spacing-mobile);
+    --font-size-hero:    var(--font-size-hero-mobile);
   }
 }

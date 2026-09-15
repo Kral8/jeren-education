@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" role="img" aria-label=">;H51=K9 A?@02>G=8:">
+  <defs>
+    <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B2A21"/>
+      <stop offset="100%" stop-color="#071A15"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="600" fill="url(#bg1)"/>
+  <rect x="28" y="40" width="344" height="520" rx="8" fill="#132F26" stroke="#C6A15B" stroke-width="3"/>
+  <text x="200" y="120" fill="#C6A15B" font-family="Georgia, serif" font-size="22" font-weight="700" text-anchor="middle">JEREN</text>
+  <text x="200" y="148" fill="#8A948C" font-family="Arial, sans-serif" font-size="12" letter-spacing="4" text-anchor="middle">EDUCATION</text>
+  <text x="200" y="340" fill="#F0EBE3" font-family="Georgia, serif" font-size="28" font-weight="700" text-anchor="middle">
+    <tspan x="200" dy="0">>;H51=K9</tspan>
+    <tspan x="200" dy="36">A?@02>G=8:</tspan>
+  </text>
+  <text x="200" y="480" fill="#E0C47A" font-family="Arial, sans-serif" font-size="16" text-anchor="middle"> CAA:89 O7K:</text>
+</svg>

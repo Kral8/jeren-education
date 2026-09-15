@@ -15,11 +15,23 @@
   z-index: var(--z-sticky);
   width: 100%;
   height: var(--header-height);
-  background: var(--color-bg-glass);
+  background: rgba(3, 10, 8, 0.82);
   border-bottom: 1px solid var(--color-border-default);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  box-shadow: 0 1px 0 rgba(198, 161, 91, 0.12);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+  box-shadow: 0 1px 0 rgba(212, 175, 106, 0.1), 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: var(--gradient-gold-line);
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .header__inner {
@@ -58,10 +70,10 @@
 }
 
 .header__logo-name {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: var(--letter-spacing-widest);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wider);
   text-transform: uppercase;
   color: var(--color-text-primary);
   line-height: 1;
@@ -109,7 +121,9 @@
 
 .header__nav-link--active,
 .header__nav-link[aria-current="page"] {
-  color: var(--color-brand-primary);
+  color: var(--color-brand-light);
+  background: var(--color-brand-subtle);
+  box-shadow: inset 0 0 0 1px rgba(212, 175, 106, 0.2);
 }
 
 .header__nav-link:focus-visible {
@@ -363,10 +377,10 @@
 }
 
 .footer__brand-name {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: var(--letter-spacing-widest);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wider);
   text-transform: uppercase;
   color: var(--color-text-primary);
   margin-bottom: var(--space-3);
@@ -529,11 +543,13 @@
 .page-header {
   padding-block: var(--space-12) var(--space-8);
   border-bottom: 1px solid var(--color-border-default);
+  background: linear-gradient(180deg, rgba(212, 175, 106, 0.04) 0%, transparent 100%);
 }
 
 .page-header__title {
-  font-size: clamp(1.625rem, 4vw, var(--font-size-3xl));
-  font-weight: var(--font-weight-bold);
+  font-family: var(--font-family-display);
+  font-size: clamp(2rem, 4.5vw, var(--font-size-4xl));
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   margin-bottom: var(--space-3);
   line-height: var(--line-height-tight);

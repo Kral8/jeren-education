@@ -11,6 +11,7 @@ const FOOTER_NAV = [
   { key: 'nav.checkWork', file: 'check-work.html' },
   { key: 'nav.library', file: 'library.html' },
   { key: 'nav.dictionaries', file: 'dictionaries.html' },
+  { key: 'nav.tests', file: 'tests.html' },
 ];
 
 export function renderFooter(isSubpage = false) {

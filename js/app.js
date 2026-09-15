@@ -1,5 +1,5 @@
 import { initI18n } from './i18n/index.js';
-import { renderHeader, initMobileNav } from './components/header.js';
+import { renderHeader, initMobileNav, initHeaderAuth } from './components/header.js';
 import { renderFooter } from './components/footer.js';
 import { initLanguageSwitcher } from './components/language-switcher.js';
 import { verifySession } from './services/auth.service.js';
@@ -14,6 +14,7 @@ function mountLayout() {
   if (footerEl) footerEl.innerHTML = renderFooter(isSubpage);
   initLanguageSwitcher();
   initMobileNav();
+  initHeaderAuth();
   initI18n();
 }
 

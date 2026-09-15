@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /data/dictionaries/archives/
+Disallow: /data/library/files/
 
 Sitemap: https://YOUR_USERNAME.github.io/jeren-education/sitemap.xml
