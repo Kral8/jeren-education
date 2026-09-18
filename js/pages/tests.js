@@ -10,8 +10,8 @@ import {
 const basePath = document.body.dataset.base || '../';
 
 const TRACK_CATEGORIES = {
-  russian: ['orthography', 'grammar', 'punctuation', 'stress', 'lexicon'],
-  literature: ['authors', 'works', 'poetry', 'terms'],
+  russian: ['orthography', 'orthoepy', 'syntax', 'phonetics', 'noun', 'adjective'],
+  literature: ['authors', 'general', 'works'],
 };
 
 let state = {

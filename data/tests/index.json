@@ -1,0 +1,75 @@
+{
+  "russianTotal": 985,
+  "literatureTotal": 3004,
+  "files": [
+    {
+      "file": "Русский язык/Орфография.docx",
+      "track": "russian",
+      "category": "orthography",
+      "count": 216
+    },
+    {
+      "file": "Русский язык/Орфоэпия.docx",
+      "track": "russian",
+      "category": "orthoepy",
+      "count": 77
+    },
+    {
+      "file": "Русский язык/Синтаксис.docx",
+      "track": "russian",
+      "category": "syntax",
+      "count": 400
+    },
+    {
+      "file": "Русский язык/Фонетика.docx",
+      "track": "russian",
+      "category": "phonetics",
+      "count": 200
+    },
+    {
+      "file": "Русский язык/Части речи/1 имя сущ/Тест.docx",
+      "track": "russian",
+      "category": "noun",
+      "count": 115
+    },
+    {
+      "file": "Русский язык/Части речи/2 имя прилагательное/Тест.docx",
+      "track": "russian",
+      "category": "adjective",
+      "count": 100
+    },
+    {
+      "file": "Литература/Тесты Биография писателей.docx",
+      "track": "literature",
+      "category": "authors",
+      "count": 1008
+    },
+    {
+      "file": "Литература/Тесты общие.docx",
+      "track": "literature",
+      "category": "general",
+      "count": 400
+    },
+    {
+      "file": "Литература/Тесты по произведениям.docx",
+      "track": "literature",
+      "category": "works",
+      "count": 1599
+    }
+  ],
+  "categories": {
+    "russian": [
+      "adjective",
+      "noun",
+      "orthoepy",
+      "orthography",
+      "phonetics",
+      "syntax"
+    ],
+    "literature": [
+      "authors",
+      "general",
+      "works"
+    ]
+  }
+}
