@@ -1,14 +1,23 @@
 import { t } from '../i18n/index.js';
 import {
-  buildFreshTest,
+  buildTestByTitle,
   calculateScore,
   refreshTestPool,
   getCorrectAnswerText,
+  getCategoryTests,
+  formatTestLabel,
   QUESTIONS_PER_TEST,
 } from '../services/tests.service.js';
 
 const basePath = document.body.dataset.base || '../';
-const TEST_DURATION_SECONDS = 15 * 60;
+const TEST_DURATION_SECONDS = 20 * 60;
+
+function escapeHtml(text) {
+  return String(text || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/"/g, '&quot;');
+}
 
 const TRACK_CATEGORIES = {
   russian: ['orthography', 'orthoepy', 'syntax', 'phonetics', 'noun', 'adjective'],
@@ -17,13 +26,15 @@ const TRACK_CATEGORIES = {
 
 let state = {
   track: 'russian',
+  category: 'orthography',
+  testTitle: '',
+  availableTests: [],
   questions: [],
   answers: [],
   revealed: [],
   current: 0,
   timer: null,
   timeLeft: 0,
-  category: 'orthography',
   loading: false,
   finished: false,
 };
@@ -33,6 +44,22 @@ function categoryButtons(track, active) {
   return cats.map((c) => {
     const isActive = c === active;
     return `<button type="button" class="test-category-chip${isActive ? ' test-category-chip--active' : ''}" data-category="${c}">${t(`tests.categories.${c}`)}</button>`;
+  }).join('');
+}
+
+function testButtons(tests, activeTitle) {
+  if (!tests.length) {
+    return `<p class="test-panel__empty">${t('tests.noTestsInCategory')}</p>`;
+  }
+  return tests.map((test, index) => {
+    const isActive = test.title === activeTitle;
+    const countLabel = test.questionCount < QUESTIONS_PER_TEST
+      ? t('tests.questionsCountShort').replace('{count}', String(test.questionCount))
+      : `${QUESTIONS_PER_TEST}`;
+    return `<button type="button" class="test-number-chip${isActive ? ' test-number-chip--active' : ''}" data-test-index="${index}" title="${escapeHtml(test.title)}">
+      <span class="test-number-chip__label">${escapeHtml(test.shortLabel)}</span>
+      <span class="test-number-chip__meta">${countLabel} ${t('tests.questionsShort')}</span>
+    </button>`;
   }).join('');
 }
 
@@ -98,6 +125,7 @@ function renderQuestion(el) {
     <div class="test-panel test-panel--active">
       <div class="test-meta">
         <span class="test-meta__counter">${state.current + 1} / ${state.questions.length}</span>
+        <span class="test-meta__label">${formatTestLabel(state.testTitle)}</span>
         <span class="test-meta__timer">${formatTimer(state.timeLeft)}</span>
       </div>
       <div class="test-progress"><div class="test-progress__bar" style="width:${progress}%"></div></div>
@@ -150,8 +178,47 @@ function renderQuestion(el) {
   });
 }
 
+async function loadTestsForCategory(setupEl) {
+  const grid = document.getElementById('test-number-grid');
+  if (!grid) return;
+
+  grid.innerHTML = `<p class="test-panel__loading">${t('tests.loadingTests')}</p>`;
+  state.availableTests = await getCategoryTests(state.track, state.category, basePath);
+
+  if (!state.availableTests.length) {
+    state.testTitle = '';
+    grid.innerHTML = testButtons([], '');
+    updateStartButton();
+    return;
+  }
+
+  const stillValid = state.availableTests.some((test) => test.title === state.testTitle);
+  if (!stillValid) state.testTitle = state.availableTests[0].title;
+
+  grid.innerHTML = testButtons(state.availableTests, state.testTitle);
+  bindTestChips(setupEl);
+  updateStartButton();
+}
+
+function updateStartButton() {
+  const startBtn = document.getElementById('test-start');
+  const noteEl = document.getElementById('test-selected-note');
+  const activeTest = state.availableTests.find((test) => test.title === state.testTitle);
+
+  if (startBtn) {
+    startBtn.disabled = !activeTest;
+  }
+  if (noteEl && activeTest) {
+    noteEl.textContent = t('tests.selectedTestNote')
+      .replace('{test}', activeTest.shortLabel)
+      .replace('{count}', String(activeTest.questionCount));
+  } else if (noteEl) {
+    noteEl.textContent = t('tests.noTestsInCategory');
+  }
+}
+
 async function startTest(setupEl, activeEl, resultEl, fromRetry = false) {
-  if (state.loading) return;
+  if (state.loading || !state.testTitle) return;
   state.loading = true;
 
   const startBtn = document.getElementById('test-start');
@@ -159,7 +226,7 @@ async function startTest(setupEl, activeEl, resultEl, fromRetry = false) {
 
   try {
     refreshTestPool();
-    state.questions = await buildFreshTest(state.track, state.category, basePath);
+    state.questions = await buildTestByTitle(state.track, state.category, state.testTitle, basePath);
   } finally {
     state.loading = false;
     if (startBtn) startBtn.disabled = false;
@@ -213,7 +280,7 @@ async function finishTest() {
       <p class="test-result-eyebrow">${t('tests.result')}</p>
       <div class="test-score">${score.percent}%</div>
       <p class="test-result-line">${t('tests.score')}: ${score.correct} / ${score.total}</p>
-      <p class="test-result-points">${t('tests.points')}: ${score.points} ${t('tests.pointsLabel')}</p>
+      <p class="test-result-points">${t('tests.points')}: ${score.points} ${t('tests.pointsOf').replace('{total}', String(score.total))}</p>
       <div class="test-result-actions">
         <button class="btn btn--primary btn--lg" id="test-retry" type="button">${t('tests.retry')}</button>
         <button class="btn btn--ghost" id="test-back-setup" type="button">${t('tests.backToSetup')}</button>
@@ -237,7 +304,7 @@ function finishTestTimedOut() {
   resultEl.innerHTML = `
     <div class="card card--elevated test-result-card test-panel test-result-card--timeout">
       <p class="test-result-eyebrow">${t('tests.timeUp')}</p>
-      <div class="test-score test-score--timeout">15:00</div>
+      <div class="test-score test-score--timeout">20:00</div>
       <p class="test-result-line test-result-line--timeout">${t('tests.timeUpMessage')}</p>
       <div class="test-result-actions">
         <button class="btn btn--primary btn--lg" id="test-retry" type="button">${t('tests.retry')}</button>
@@ -248,9 +315,34 @@ function finishTestTimedOut() {
   bindResultActions(resultEl, setupEl, activeEl);
 }
 
+function bindTestChips(setupEl) {
+  setupEl.querySelectorAll('.test-number-chip').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const index = parseInt(chip.dataset.testIndex, 10);
+      state.testTitle = state.availableTests[index]?.title || '';
+      setupEl.querySelectorAll('.test-number-chip').forEach((c) => {
+        c.classList.toggle('test-number-chip--active', c === chip);
+      });
+      updateStartButton();
+    });
+  });
+}
+
+function bindCategoryChips(setupEl, activeEl, resultEl) {
+  setupEl.querySelectorAll('.test-category-chip').forEach((chip) => {
+    chip.addEventListener('click', async () => {
+      state.category = chip.dataset.category;
+      setupEl.querySelectorAll('.test-category-chip').forEach((c) => {
+        c.classList.toggle('test-category-chip--active', c === chip);
+      });
+      await loadTestsForCategory(setupEl);
+    });
+  });
+}
+
 function bindSetupEvents(setupEl, activeEl, resultEl) {
   setupEl.querySelectorAll('.test-track-card').forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       state.track = btn.dataset.track;
       setupEl.querySelectorAll('.test-track-card').forEach((b) => {
         b.classList.toggle('test-track-card--active', b === btn);
@@ -261,6 +353,7 @@ function bindSetupEvents(setupEl, activeEl, resultEl) {
         state.category = cats[0];
         grid.innerHTML = categoryButtons(state.track, state.category);
         bindCategoryChips(setupEl, activeEl, resultEl);
+        await loadTestsForCategory(setupEl);
       }
     });
   });
@@ -269,17 +362,6 @@ function bindSetupEvents(setupEl, activeEl, resultEl) {
 
   document.getElementById('test-start')?.addEventListener('click', async () => {
     await startTest(setupEl, activeEl, resultEl);
-  });
-}
-
-function bindCategoryChips(setupEl, activeEl, resultEl) {
-  setupEl.querySelectorAll('.test-category-chip').forEach((chip) => {
-    chip.addEventListener('click', () => {
-      state.category = chip.dataset.category;
-      setupEl.querySelectorAll('.test-category-chip').forEach((c) => {
-        c.classList.toggle('test-category-chip--active', c === chip);
-      });
-    });
   });
 }
 
@@ -308,7 +390,13 @@ function initSetup(setupEl, activeEl, resultEl) {
           ${categoryButtons(state.track, state.category)}
         </div>
       </div>
-      <p class="test-panel__note">${t('tests.fixedCount')}</p>
+      <div class="test-panel__section">
+        <div class="test-panel__label">${t('tests.selectTest')}</div>
+        <div class="test-number-grid" id="test-number-grid">
+          <p class="test-panel__loading">${t('tests.loadingTests')}</p>
+        </div>
+      </div>
+      <p class="test-panel__note" id="test-selected-note">${t('tests.fixedCount')}</p>
       <p class="test-panel__note test-panel__note--muted">${t('tests.timeLimit')}</p>
       <button class="btn btn--primary btn--lg btn--full" id="test-start" type="button">${t('tests.start')}</button>
     </div>`;
@@ -322,6 +410,7 @@ export async function init() {
   const resultEl = document.getElementById('test-result');
   if (!setupEl) return;
   initSetup(setupEl, activeEl, resultEl);
+  await loadTestsForCategory(setupEl);
 }
 
 init();

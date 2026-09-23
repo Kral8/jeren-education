@@ -1,6 +1,7 @@
 import { getItem, setItem } from '../utils/storage.js';
 
-const QUESTIONS_PER_TEST = 15;
+export const QUESTIONS_PER_TEST = 20;
+
 const USED_IDS_KEY = 'tests_used_question_ids';
 
 const TRACK_FILES = {
@@ -11,15 +12,6 @@ const TRACK_FILES = {
 let poolsCache = {};
 let sessionSeed = Date.now();
 
-function shuffle(arr) {
-  const copy = [...arr];
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
-
 function normalizeQuestion(item) {
   if (!item?.question || !item?.options?.length) return null;
   const options = item.options.slice(0, 4);
@@ -27,25 +19,33 @@ function normalizeQuestion(item) {
     id: item.id,
     track: item.track,
     category: item.category,
+    testTitle: String(item.testTitle || '').trim(),
     question: item.question,
     options,
     correct: Math.max(0, Math.min(options.length - 1, item.correct ?? 0)),
   };
 }
 
-function getUsedIds() {
-  return new Set(getItem(USED_IDS_KEY, []));
+export function parseTestNumber(title) {
+  const match = String(title || '').match(/(?:№|N°|#)\s*(\d+)/i);
+  return match ? parseInt(match[1], 10) : null;
 }
 
-function markUsed(questions) {
-  const used = getUsedIds();
-  questions.forEach((q) => used.add(q.id));
-  setItem(USED_IDS_KEY, [...used].slice(-4000));
+export function formatTestLabel(title) {
+  const number = parseTestNumber(title);
+  if (number != null && /^тест\s*№?\s*\d+/i.test(String(title).trim())) {
+    return `Тест №${number}`;
+  }
+  return String(title || 'Тест').trim();
 }
 
-function filterUnused(questions) {
-  const used = getUsedIds();
-  return questions.filter((q) => !used.has(q.id));
+function sortTests(a, b) {
+  const numA = parseTestNumber(a.title);
+  const numB = parseTestNumber(b.title);
+  if (numA != null && numB != null) return numA - numB;
+  if (numA != null) return -1;
+  if (numB != null) return 1;
+  return a.title.localeCompare(b.title, 'ru');
 }
 
 async function loadTrackPool(track, basePath) {
@@ -71,29 +71,41 @@ async function loadTrackPool(track, basePath) {
   }
 }
 
-export async function buildFreshTest(track, category, basePath = '') {
+export async function getCategoryTests(track, category, basePath = '') {
   const pool = await loadTrackPool(track, basePath);
-  const categoryPool = pool.filter((q) => q.category === category);
-  if (!categoryPool.length) return [];
+  const groups = new Map();
 
-  const questionCount = Math.min(QUESTIONS_PER_TEST, categoryPool.length);
-  let available = filterUnused(categoryPool);
+  pool.forEach((question) => {
+    if (question.category !== category) return;
+    const title = question.testTitle || 'Тест';
+    if (!groups.has(title)) groups.set(title, []);
+    groups.get(title).push(question);
+  });
 
-  if (available.length < questionCount) {
-    const categoryUsedCount = categoryPool.filter((q) => getUsedIds().has(q.id)).length;
-    if (categoryUsedCount >= categoryPool.length - questionCount) {
-      const used = getUsedIds();
-      categoryPool.forEach((q) => used.delete(q.id));
-      setItem(USED_IDS_KEY, [...used]);
-      available = categoryPool;
-    } else {
-      available = categoryPool;
-    }
-  }
+  return [...groups.entries()]
+    .map(([title, questions]) => ({
+      title,
+      shortLabel: formatTestLabel(title),
+      questionCount: Math.min(questions.length, QUESTIONS_PER_TEST),
+      totalAvailable: questions.length,
+    }))
+    .sort(sortTests);
+}
 
-  const selected = shuffle(available).slice(0, questionCount);
-  if (selected.length) markUsed(selected);
-  return selected;
+export async function buildTestByTitle(track, category, testTitle, basePath = '') {
+  const pool = await loadTrackPool(track, basePath);
+  const selected = pool.filter(
+    (question) => question.category === category && question.testTitle === testTitle,
+  );
+  return selected.slice(0, QUESTIONS_PER_TEST);
+}
+
+/** @deprecated Use buildTestByTitle */
+export async function buildFreshTest(track, category, basePath = '', testTitle = '') {
+  if (testTitle) return buildTestByTitle(track, category, testTitle, basePath);
+  const tests = await getCategoryTests(track, category, basePath);
+  if (!tests.length) return [];
+  return buildTestByTitle(track, category, tests[0].title, basePath);
 }
 
 export function refreshTestPool() {
@@ -115,4 +127,4 @@ export function getCorrectAnswerText(question) {
   return question?.options?.[question.correct] ?? '';
 }
 
-export { QUESTIONS_PER_TEST, TRACK_FILES };
+export { TRACK_FILES };
