@@ -111,11 +111,18 @@ function showTyping(container) {
   msg.setAttribute('aria-live', 'polite');
   msg.textContent = t('aria.typing');
   container.appendChild(msg);
-  container.scrollTop = container.scrollHeight;
+  scrollMessagesToBottom(container);
 }
 
 function removeTyping(container) {
   container?.querySelector('#aria-typing')?.remove();
+}
+
+function scrollMessagesToBottom(container) {
+  if (!container) return;
+  requestAnimationFrame(() => {
+    container.scrollTop = container.scrollHeight;
+  });
 }
 
 function addMessage(text, role, markdown = false) {
@@ -134,7 +141,7 @@ function addMessage(text, role, markdown = false) {
   }
 
   container.appendChild(msg);
-  container.scrollTop = container.scrollHeight;
+  scrollMessagesToBottom(container);
 }
 
 function getGreeting() {

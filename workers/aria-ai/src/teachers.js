@@ -13,6 +13,53 @@ async function getTeachersList(env) {
   return teachers.sort((a, b) => b.createdAt - a.createdAt);
 }
 
+export async function createTeacherRecord(env, {
+  firstName,
+  lastName,
+  organization = '',
+  specialty = '',
+  email = '',
+  phone = '',
+  country = '',
+  region = '',
+  city = '',
+  birthYear = '',
+  fromRequestId = null,
+} = {}) {
+  const plainCode = generateTeacherCode();
+  const codeHash = await sha256(plainCode);
+  const id = randomToken(8);
+  const now = Date.now();
+  const teacher = {
+    id,
+    firstName: String(firstName || '').trim(),
+    lastName: String(lastName || '').trim(),
+    codeHash,
+    plainCode,
+    status: 'active',
+    organization: String(organization || '').trim(),
+    specialty: String(specialty || '').trim(),
+    email: String(email || '').trim(),
+    phone: String(phone || '').trim(),
+    country: String(country || '').trim(),
+    region: String(region || '').trim(),
+    city: String(city || '').trim(),
+    birthYear: String(birthYear || '').trim(),
+    fromRequestId,
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  await env.TEACHERS_KV.put(`teacher:${id}`, JSON.stringify(teacher));
+
+  const listRaw = await env.TEACHERS_KV.get('teachers:list');
+  const ids = listRaw ? JSON.parse(listRaw) : [];
+  ids.push(id);
+  await env.TEACHERS_KV.put('teachers:list', JSON.stringify(ids));
+
+  return teacher;
+}
+
 export async function handleTeachersList(request, env, origin, session) {
   if (!requireRole(session, ['admin'])) {
     return jsonResponse({ success: false, error: 'Forbidden' }, 403, origin);
@@ -50,37 +97,17 @@ export async function handleTeacherCreate(request, env, origin, session) {
     return jsonResponse({ success: false, error: 'Name required' }, 400, origin);
   }
 
-  const plainCode = generateTeacherCode();
-  const codeHash = await sha256(plainCode);
-  const id = randomToken(8);
-  const now = Date.now();
-  const teacher = {
-    id,
-    firstName,
-    lastName,
-    codeHash,
-    plainCode,
-    status: 'active',
-    createdAt: now,
-    updatedAt: now,
-  };
-
-  await env.TEACHERS_KV.put(`teacher:${id}`, JSON.stringify(teacher));
-
-  const listRaw = await env.TEACHERS_KV.get('teachers:list');
-  const ids = listRaw ? JSON.parse(listRaw) : [];
-  ids.push(id);
-  await env.TEACHERS_KV.put('teachers:list', JSON.stringify(ids));
+  const teacher = await createTeacherRecord(env, { firstName, lastName });
 
   return jsonResponse({
     success: true,
     teacher: {
-      id,
-      firstName,
-      lastName,
-      code: plainCode,
-      status: 'active',
-      createdAt: now,
+      id: teacher.id,
+      firstName: teacher.firstName,
+      lastName: teacher.lastName,
+      code: teacher.plainCode,
+      status: teacher.status,
+      createdAt: teacher.createdAt,
     },
   }, 201, origin);
 }

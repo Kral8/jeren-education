@@ -2,6 +2,15 @@
  * Renders safe document model into DOM (textContent only)
  */
 
+export function renderHtmlDocument(html, container) {
+  container.replaceChildren();
+  const article = document.createElement('article');
+  article.className = 'je-reader__html';
+  article.innerHTML = html;
+  container.appendChild(article);
+  applyCopyProtection(container);
+}
+
 export function renderDocument(sections, container, options = {}) {
   container.replaceChildren();
   const frag = document.createDocumentFragment();

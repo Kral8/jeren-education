@@ -1,7 +1,11 @@
 const ALLOWED_ORIGIN_PATTERNS = [
-  /^https:\/\/kral8\.github\.io$/,
-  /^http:\/\/localhost:\d+$/,
-  /^http:\/\/127\.0\.0\.1:\d+$/,
+  /^https:\/\/kral8\.github\.io(\/.*)?$/,
+  /^https?:\/\/localhost(:\d+)?$/,
+  /^https?:\/\/127\.0\.0\.1(:\d+)?$/,
+  /^https?:\/\/\[::1\](:\d+)?$/,
+  /^https?:\/\/192\.168\.\d{1,3}\.\d{1,3}(:\d+)?$/,
+  /^https?:\/\/10\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?$/,
+  /^https:\/\/([a-z0-9-]+\.)?jeren-education\.(pages\.dev|workers\.dev|com)$/i,
 ];
 
 export function isAllowedOrigin(origin) {

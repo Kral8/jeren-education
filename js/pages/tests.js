@@ -8,6 +8,7 @@ import {
 } from '../services/tests.service.js';
 
 const basePath = document.body.dataset.base || '../';
+const TEST_DURATION_SECONDS = 15 * 60;
 
 const TRACK_CATEGORIES = {
   russian: ['orthography', 'orthoepy', 'syntax', 'phonetics', 'noun', 'adjective'],
@@ -23,24 +24,33 @@ let state = {
   timer: null,
   timeLeft: 0,
   category: 'orthography',
-  difficulty: 'medium',
   loading: false,
+  finished: false,
 };
 
-function categoryOptions(track) {
+function categoryButtons(track, active) {
   const cats = TRACK_CATEGORIES[track] || TRACK_CATEGORIES.russian;
-  return cats.map((c) => `<option value="${c}">${t(`tests.categories.${c}`)}</option>`).join('');
+  return cats.map((c) => {
+    const isActive = c === active;
+    return `<button type="button" class="test-category-chip${isActive ? ' test-category-chip--active' : ''}" data-category="${c}">${t(`tests.categories.${c}`)}</button>`;
+  }).join('');
+}
+
+function formatTimer(seconds) {
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
 }
 
 function startTimer(el) {
   clearInterval(state.timer);
   state.timer = setInterval(() => {
-    state.timeLeft--;
-    const timerEl = el.querySelector('.test-timer');
+    if (state.finished) return;
+    state.timeLeft -= 1;
+    const timerEl = el.querySelector('.test-meta__timer');
     if (timerEl) {
-      timerEl.textContent = `${t('tests.timeLeft')}: ${Math.floor(state.timeLeft / 60)}:${String(state.timeLeft % 60).padStart(2, '0')}`;
+      timerEl.textContent = formatTimer(state.timeLeft);
+      timerEl.classList.toggle('test-meta__timer--warn', state.timeLeft <= 60);
     }
-    if (state.timeLeft <= 0) finishTest();
+    if (state.timeLeft <= 0) finishTestTimedOut();
   }, 1000);
 }
 
@@ -81,31 +91,36 @@ function revealCurrentAnswer(el) {
 
 function renderQuestion(el) {
   const q = state.questions[state.current];
-  const progress = (state.current / state.questions.length) * 100;
+  const progress = ((state.current + 1) / state.questions.length) * 100;
   const revealed = state.revealed[state.current];
 
   el.innerHTML = `
-    <div class="test-timer">${t('tests.timeLeft')}: ${Math.floor(state.timeLeft / 60)}:${String(state.timeLeft % 60).padStart(2, '0')}</div>
-    <div class="test-progress"><div class="test-progress__bar" style="width:${progress}%"></div></div>
-    <div class="test-question">${state.current + 1} / ${state.questions.length}. ${q.question}</div>
-    <div class="test-options">
-      ${q.options.map((opt, i) => {
-        let cls = 'test-option';
-        if (!revealed && state.answers[state.current] === i) cls += ' test-option--selected';
-        if (revealed && i === q.correct) cls += ' test-option--correct';
-        if (revealed && state.answers[state.current] === i && i !== q.correct) cls += ' test-option--wrong';
-        return `<button class="${cls}" data-i="${i}" type="button"${revealed ? ' disabled' : ''}>${opt}</button>`;
-      }).join('')}
-    </div>
-    ${revealed ? `<div class="test-feedback ${state.answers[state.current] === q.correct ? 'test-feedback--ok' : 'test-feedback--bad'}">${
-      state.answers[state.current] === q.correct
-        ? t('tests.correct')
-        : `${t('tests.incorrect')}. ${t('tests.correctAnswer')}: ${getCorrectAnswerText(q)}`
-    }</div>` : ''}
-    <div class="test-actions">
-      <button class="btn btn--primary" id="test-next" type="button">${revealed
-        ? (state.current < state.questions.length - 1 ? t('tests.next') : t('tests.finish'))
-        : t('tests.checkAnswer')}</button>
+    <div class="test-panel test-panel--active">
+      <div class="test-meta">
+        <span class="test-meta__counter">${state.current + 1} / ${state.questions.length}</span>
+        <span class="test-meta__timer">${formatTimer(state.timeLeft)}</span>
+      </div>
+      <div class="test-progress"><div class="test-progress__bar" style="width:${progress}%"></div></div>
+      <div class="test-question">${q.question}</div>
+      <div class="test-options">
+        ${q.options.map((opt, i) => {
+          let cls = 'test-option';
+          if (!revealed && state.answers[state.current] === i) cls += ' test-option--selected';
+          if (revealed && i === q.correct) cls += ' test-option--correct';
+          if (revealed && state.answers[state.current] === i && i !== q.correct) cls += ' test-option--wrong';
+          return `<button class="${cls}" data-i="${i}" type="button"${revealed ? ' disabled' : ''}>${opt}</button>`;
+        }).join('')}
+      </div>
+      ${revealed ? `<div class="test-feedback ${state.answers[state.current] === q.correct ? 'test-feedback--ok' : 'test-feedback--bad'}">${
+        state.answers[state.current] === q.correct
+          ? t('tests.correct')
+          : `${t('tests.incorrect')}. ${t('tests.correctAnswer')}: ${getCorrectAnswerText(q)}`
+      }</div>` : ''}
+      <div class="test-actions">
+        <button class="btn btn--primary btn--lg" id="test-next" type="button">${revealed
+          ? (state.current < state.questions.length - 1 ? t('tests.next') : t('tests.finish'))
+          : t('tests.checkAnswer')}</button>
+      </div>
     </div>`;
 
   if (!revealed) {
@@ -135,29 +150,33 @@ function renderQuestion(el) {
   });
 }
 
-async function startTest(setupEl, activeEl, resultEl) {
+async function startTest(setupEl, activeEl, resultEl, fromRetry = false) {
   if (state.loading) return;
   state.loading = true;
 
-  setupEl.innerHTML = `<div class="empty-state">${t('tests.loading')}</div>`;
+  const startBtn = document.getElementById('test-start');
+  if (startBtn) startBtn.disabled = true;
 
   try {
     refreshTestPool();
-    state.questions = await buildFreshTest(state.track, state.category, state.difficulty, basePath);
+    state.questions = await buildFreshTest(state.track, state.category, basePath);
   } finally {
     state.loading = false;
+    if (startBtn) startBtn.disabled = false;
   }
 
-  if (state.questions.length < QUESTIONS_PER_TEST) {
+  if (!state.questions.length) {
     alert(t('tests.noQuestions'));
-    await initSetup(setupEl, activeEl, resultEl);
+    if (!fromRetry) return;
+    setupEl.hidden = false;
     return;
   }
 
   state.answers = new Array(state.questions.length).fill(null);
   state.revealed = new Array(state.questions.length).fill(false);
   state.current = 0;
-  state.timeLeft = state.questions.length * 45;
+  state.finished = false;
+  state.timeLeft = TEST_DURATION_SECONDS;
   setupEl.hidden = true;
   activeEl.hidden = false;
   resultEl.hidden = true;
@@ -165,8 +184,23 @@ async function startTest(setupEl, activeEl, resultEl) {
   renderQuestion(activeEl);
 }
 
+function bindResultActions(resultEl, setupEl, activeEl) {
+  document.getElementById('test-retry')?.addEventListener('click', async () => {
+    resultEl.hidden = true;
+    await startTest(setupEl, activeEl, resultEl, true);
+  });
+
+  document.getElementById('test-back-setup')?.addEventListener('click', () => {
+    resultEl.hidden = true;
+    setupEl.hidden = false;
+  });
+}
+
 async function finishTest() {
+  if (state.finished) return;
+  state.finished = true;
   clearInterval(state.timer);
+
   const activeEl = document.getElementById('test-active');
   const resultEl = document.getElementById('test-result');
   const setupEl = document.getElementById('test-setup');
@@ -175,68 +209,111 @@ async function finishTest() {
 
   const score = calculateScore(state.answers, state.questions);
   resultEl.innerHTML = `
-    <div class="card card--elevated test-result-card">
+    <div class="card card--elevated test-result-card test-panel">
+      <p class="test-result-eyebrow">${t('tests.result')}</p>
       <div class="test-score">${score.percent}%</div>
       <p class="test-result-line">${t('tests.score')}: ${score.correct} / ${score.total}</p>
       <p class="test-result-points">${t('tests.points')}: ${score.points} ${t('tests.pointsLabel')}</p>
-      <button class="btn btn--primary" id="test-retry" type="button">${t('tests.retry')}</button>
+      <div class="test-result-actions">
+        <button class="btn btn--primary btn--lg" id="test-retry" type="button">${t('tests.retry')}</button>
+        <button class="btn btn--ghost" id="test-back-setup" type="button">${t('tests.backToSetup')}</button>
+      </div>
     </div>`;
 
-  document.getElementById('test-retry').addEventListener('click', async () => {
-    resultEl.hidden = true;
-    setupEl.hidden = false;
-    await startTest(setupEl, activeEl, resultEl);
-  });
+  bindResultActions(resultEl, setupEl, activeEl);
 }
 
-function bindTrackChange(setupEl, activeEl, resultEl) {
-  const trackEl = document.getElementById('test-track');
-  const categoryEl = document.getElementById('test-category');
-  if (!trackEl || !categoryEl) return;
+function finishTestTimedOut() {
+  if (state.finished) return;
+  state.finished = true;
+  clearInterval(state.timer);
 
-  trackEl.addEventListener('change', () => {
-    state.track = trackEl.value;
-    categoryEl.innerHTML = categoryOptions(state.track);
-    state.category = categoryEl.value;
+  const activeEl = document.getElementById('test-active');
+  const resultEl = document.getElementById('test-result');
+  const setupEl = document.getElementById('test-setup');
+  activeEl.hidden = true;
+  resultEl.hidden = false;
+
+  resultEl.innerHTML = `
+    <div class="card card--elevated test-result-card test-panel test-result-card--timeout">
+      <p class="test-result-eyebrow">${t('tests.timeUp')}</p>
+      <div class="test-score test-score--timeout">15:00</div>
+      <p class="test-result-line test-result-line--timeout">${t('tests.timeUpMessage')}</p>
+      <div class="test-result-actions">
+        <button class="btn btn--primary btn--lg" id="test-retry" type="button">${t('tests.retry')}</button>
+        <button class="btn btn--ghost" id="test-back-setup" type="button">${t('tests.exit')}</button>
+      </div>
+    </div>`;
+
+  bindResultActions(resultEl, setupEl, activeEl);
+}
+
+function bindSetupEvents(setupEl, activeEl, resultEl) {
+  setupEl.querySelectorAll('.test-track-card').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.track = btn.dataset.track;
+      setupEl.querySelectorAll('.test-track-card').forEach((b) => {
+        b.classList.toggle('test-track-card--active', b === btn);
+      });
+      const grid = document.getElementById('test-category-grid');
+      if (grid) {
+        const cats = TRACK_CATEGORIES[state.track];
+        state.category = cats[0];
+        grid.innerHTML = categoryButtons(state.track, state.category);
+        bindCategoryChips(setupEl, activeEl, resultEl);
+      }
+    });
   });
+
+  bindCategoryChips(setupEl, activeEl, resultEl);
 
   document.getElementById('test-start')?.addEventListener('click', async () => {
-    state.track = trackEl.value;
-    state.category = categoryEl.value;
-    state.difficulty = document.getElementById('test-difficulty').value;
     await startTest(setupEl, activeEl, resultEl);
   });
 }
 
-async function initSetup(setupEl, activeEl, resultEl) {
+function bindCategoryChips(setupEl, activeEl, resultEl) {
+  setupEl.querySelectorAll('.test-category-chip').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      state.category = chip.dataset.category;
+      setupEl.querySelectorAll('.test-category-chip').forEach((c) => {
+        c.classList.toggle('test-category-chip--active', c === chip);
+      });
+    });
+  });
+}
+
+function initSetup(setupEl, activeEl, resultEl) {
   setupEl.hidden = false;
   setupEl.innerHTML = `
-    <div class="form-group">
-      <label class="form-label" for="test-track">${t('tests.selectTrack')}</label>
-      <select class="form-select" id="test-track">
-        <option value="russian"${state.track === 'russian' ? ' selected' : ''}>${t('tests.tracks.russian')}</option>
-        <option value="literature"${state.track === 'literature' ? ' selected' : ''}>${t('tests.tracks.literature')}</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label" for="test-category">${t('tests.selectCategory')}</label>
-      <select class="form-select" id="test-category">
-        ${categoryOptions(state.track)}
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label" for="test-difficulty">${t('tests.difficulty')}</label>
-      <select class="form-select" id="test-difficulty">
-        <option value="easy">${t('tests.easy')}</option>
-        <option value="medium" selected>${t('tests.medium')}</option>
-        <option value="hard">${t('tests.hard')}</option>
-      </select>
-    </div>
-    <p class="text-small text-muted">${t('tests.fixedCount')}</p>
-    <p class="text-small text-muted">${t('tests.sourceNote')}</p>
-    <button class="btn btn--primary" id="test-start" type="button">${t('tests.start')}</button>`;
+    <div class="test-panel">
+      <div class="test-panel__head">
+        <span class="test-panel__eyebrow">JEREN EDUCATION</span>
+        <h2 class="test-panel__title">${t('tests.panelTitle')}</h2>
+      </div>
+      <div class="test-panel__section">
+        <div class="test-panel__label">${t('tests.selectTrack')}</div>
+        <div class="test-track-grid">
+          <button type="button" class="test-track-card${state.track === 'russian' ? ' test-track-card--active' : ''}" data-track="russian">
+            <span class="test-track-card__title">${t('tests.tracks.russian')}</span>
+          </button>
+          <button type="button" class="test-track-card${state.track === 'literature' ? ' test-track-card--active' : ''}" data-track="literature">
+            <span class="test-track-card__title">${t('tests.tracks.literature')}</span>
+          </button>
+        </div>
+      </div>
+      <div class="test-panel__section">
+        <div class="test-panel__label">${t('tests.selectCategory')}</div>
+        <div class="test-category-grid" id="test-category-grid">
+          ${categoryButtons(state.track, state.category)}
+        </div>
+      </div>
+      <p class="test-panel__note">${t('tests.fixedCount')}</p>
+      <p class="test-panel__note test-panel__note--muted">${t('tests.timeLimit')}</p>
+      <button class="btn btn--primary btn--lg btn--full" id="test-start" type="button">${t('tests.start')}</button>
+    </div>`;
 
-  bindTrackChange(setupEl, activeEl, resultEl);
+  bindSetupEvents(setupEl, activeEl, resultEl);
 }
 
 export async function init() {
@@ -244,7 +321,7 @@ export async function init() {
   const activeEl = document.getElementById('test-active');
   const resultEl = document.getElementById('test-result');
   if (!setupEl) return;
-  await initSetup(setupEl, activeEl, resultEl);
+  initSetup(setupEl, activeEl, resultEl);
 }
 
 init();

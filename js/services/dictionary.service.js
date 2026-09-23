@@ -105,16 +105,31 @@ function searchPhraseology(data, normalizedQuery, limit = 20) {
 }
 
 function searchForeignWords(data, normalizedQuery, limit = 20) {
+  return searchGenericLexicon(data, normalizedQuery, limit, 'prefix-first');
+}
+
+function searchGenericLexicon(data, normalizedQuery, limit = 20, mode = 'broad') {
   if (data[normalizedQuery]) {
     return [{ key: normalizedQuery, entry: data[normalizedQuery], match: 'exact' }];
   }
+
   const results = [];
   for (const key of Object.keys(data)) {
-    if (key.startsWith(normalizedQuery)) {
-      results.push({ key, entry: data[key], match: 'prefix' });
+    const entry = data[key];
+    const wordNorm = entry.word?.toLowerCase().replace(/ё/g, 'е') || key;
+    const prefixMatch = key.startsWith(normalizedQuery) || wordNorm.startsWith(normalizedQuery);
+    const partialMatch = key.includes(normalizedQuery) || wordNorm.includes(normalizedQuery);
+
+    if (mode === 'prefix-first' ? prefixMatch : partialMatch) {
+      results.push({ key, entry, match: prefixMatch ? 'prefix' : 'partial' });
       if (results.length >= limit) break;
     }
   }
+
+  if (!results.length && mode === 'prefix-first') {
+    return searchGenericLexicon(data, normalizedQuery, limit, 'broad');
+  }
+
   return results;
 }
 
@@ -159,24 +174,14 @@ export async function searchDictionary(dictionaryId, query, basePath = '', limit
     };
   }
 
-  if (dictionary.id === 'foreign-words') {
+  if (dictionary.format === 'json') {
     const data = await loadJsonDictionary(basePath, dictionary.data);
+    const searchFn = dictionary.id === 'phraseology' ? searchPhraseology : searchForeignWords;
+    const resultType = dictionary.id === 'phraseology' ? 'phraseology' : 'lexicon';
     return {
-      results: searchForeignWords(data, normalizedQuery, limit).map((r) => ({
+      results: searchFn(data, normalizedQuery, limit).map((r) => ({
         ...r,
-        type: 'foreign',
-      })),
-      dictionary,
-      query: normalizedQuery,
-    };
-  }
-
-  if (dictionary.id === 'phraseology') {
-    const data = await loadJsonDictionary(basePath, dictionary.data);
-    return {
-      results: searchPhraseology(data, normalizedQuery, limit).map((r) => ({
-        ...r,
-        type: 'phraseology',
+        type: resultType,
       })),
       dictionary,
       query: normalizedQuery,

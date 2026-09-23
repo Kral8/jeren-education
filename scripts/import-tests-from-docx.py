@@ -93,8 +93,6 @@ def finalize_question(
     options = [o.strip() for o in options if o.strip()]
     if len(options) < 2:
         return None
-    while len(options) < 4:
-        options.append(options[-1])
     options = options[:4]
 
     num = qnum if qnum is not None else fallback_num
@@ -264,7 +262,9 @@ def dedupe(questions: list[dict]) -> list[dict]:
     seen: set[str] = set()
     out: list[dict] = []
     for q in questions:
-        key = re.sub(r"\s+", " ", q["question"].lower()).strip()
+        question = re.sub(r"\s+", " ", q["question"].lower()).strip()
+        options = "|".join(q.get("options") or [])
+        key = f"{question}::{options}"
         if key in seen:
             continue
         seen.add(key)

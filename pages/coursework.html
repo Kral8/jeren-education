@@ -21,37 +21,53 @@
         <h1 class="page-header__title" data-i18n="coursework.title">Курсовые работы</h1>
         <p class="page-header__subtitle" data-i18n="coursework.subtitle">Конструктор структуры и плана курсовой работы.</p>
       </div>
-      <section class="section container">
-        <form id="coursework-form" class="coursework-form card card--elevated">
+
+      <section class="section container coursework-layout">
+        <form id="coursework-form" class="coursework-form card card--glass">
           <div class="form-group">
             <label class="form-label" for="cw-topic" data-i18n="coursework.topic">Тема работы</label>
-            <input type="text" class="form-input" id="cw-topic" required>
+            <input type="text" class="form-input form-input--premium" id="cw-topic" required placeholder="Например: Средства выразительности в поэзии А. С. Пушкина">
           </div>
-          <div class="form-group">
-            <label class="form-label" for="cw-subject" data-i18n="coursework.subject">Предмет</label>
-            <select class="form-select" id="cw-subject">
-              <option value="russian" data-i18n="coursework.subjects.russian">Русский язык</option>
-              <option value="literature" data-i18n="coursework.subjects.literature">Литература</option>
-              <option value="pedagogy" data-i18n="coursework.subjects.pedagogy">Педагогика</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="cw-type" data-i18n="coursework.type">Тип работы</label>
-            <select class="form-select" id="cw-type">
-              <option value="course" data-i18n="coursework.types.course">Курсовая работа</option>
-              <option value="project" data-i18n="coursework.types.project">Проект</option>
-              <option value="research" data-i18n="coursework.types.research">Исследовательская работа</option>
-            </select>
+          <div class="coursework-form__row">
+            <div class="form-group">
+              <label class="form-label" for="cw-subject" data-i18n="coursework.subject">Предмет</label>
+              <select class="form-select form-input--premium" id="cw-subject">
+                <option value="russian" data-i18n="coursework.subjects.russian">Русский язык</option>
+                <option value="literature" data-i18n="coursework.subjects.literature">Литература</option>
+                <option value="pedagogy" data-i18n="coursework.subjects.pedagogy">Педагогика</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cw-type" data-i18n="coursework.type">Тип работы</label>
+              <select class="form-select form-input--premium" id="cw-type">
+                <option value="course" data-i18n="coursework.types.course">Курсовая работа</option>
+                <option value="project" data-i18n="coursework.types.project">Проект</option>
+                <option value="research" data-i18n="coursework.types.research">Исследовательская работа</option>
+              </select>
+            </div>
           </div>
           <div class="form-group">
             <label class="form-label" for="cw-requirements" data-i18n="coursework.requirements">Требования</label>
-            <textarea class="form-textarea" id="cw-requirements" rows="3"></textarea>
+            <textarea class="form-textarea form-input--premium" id="cw-requirements" rows="3" placeholder="Объём, оформление по ГОСТ, особые указания преподавателя"></textarea>
           </div>
-          <button type="submit" class="btn btn--primary" data-i18n="coursework.generate">Сформировать структуру</button>
+          <button type="submit" class="btn btn--primary btn--full" data-i18n="coursework.generate">Сформировать план</button>
+          <p class="form-hint" data-i18n="coursework.bibNote">AI не выдумывает источники. Добавляйте проверенные источники самостоятельно.</p>
         </form>
-        <p class="demo-note" data-i18n="coursework.bibNote">AI не выдумывает источники. Добавляйте проверенные источники самостоятельно.</p>
-        <h2 style="margin-bottom:var(--space-6);" data-i18n="coursework.sections">Разделы работы</h2>
-        <div class="coursework-sections" id="coursework-sections"></div>
+
+        <div class="coursework-output card card--glass" id="coursework-output" hidden>
+          <div class="coursework-output__toolbar">
+            <div>
+              <div class="coursework-output__label" data-i18n="coursework.documentLabel">Готовый план работы</div>
+              <div class="coursework-output__meta" id="coursework-meta"></div>
+            </div>
+            <div class="coursework-output__actions">
+              <button type="button" class="btn btn--secondary btn--sm" id="cw-copy" data-i18n="coursework.copyAll">Копировать всё</button>
+              <button type="button" class="btn btn--ghost btn--sm" id="cw-print" data-i18n="coursework.print">Печать</button>
+            </div>
+          </div>
+          <div class="coursework-sheet" id="coursework-sheet" tabindex="0" aria-label="Coursework plan"></div>
+          <p class="coursework-copy-status" id="coursework-copy-status" hidden data-i18n="coursework.copied">Скопировано в буфер обмена</p>
+        </div>
       </section>
     </main>
     <div id="site-footer"></div>

@@ -3,10 +3,7 @@ import { loadBookDocument, mountReader } from '../services/readers/book-reader.j
 import {
   getFontSizeIndex,
   setFontSizeIndex,
-  getFontSizePx,
   FONT_SIZES,
-  getProgress,
-  saveProgress,
   setLastBookId,
 } from '../services/reader-storage.js';
 
@@ -33,7 +30,6 @@ function updateProgress(scrollEl) {
   const ratio = max > 0 ? scrollEl.scrollTop / max : 0;
   const bar = document.getElementById('reader-progress-bar');
   if (bar) bar.style.width = `${Math.round(ratio * 100)}%`;
-  return ratio;
 }
 
 function blockCopyShortcuts(e) {
@@ -51,7 +47,6 @@ async function init() {
   const contentEl = document.getElementById('reader-content');
   const tocEl = document.getElementById('reader-toc');
   const titleEl = document.getElementById('reader-title');
-  const resumeEl = document.getElementById('reader-resume');
 
   if (!bookId || !scrollEl || !contentEl) return;
 
@@ -73,11 +68,8 @@ async function init() {
 
   document.addEventListener('keydown', blockCopyShortcuts);
 
-  const savedProgress = getProgress(bookId);
-
   scrollEl.addEventListener('scroll', () => {
-    const ratio = updateProgress(scrollEl);
-    saveProgress(bookId, ratio);
+    updateProgress(scrollEl);
   }, { passive: true });
 
   try {
@@ -88,21 +80,7 @@ async function init() {
     mountReader(doc, { contentEl, tocEl, scrollEl });
     applyFontSize(getFontSizeIndex());
 
-    requestAnimationFrame(() => {
-      if (savedProgress > 0.05 && savedProgress < 0.95 && resumeEl) {
-        resumeEl.hidden = false;
-        document.getElementById('reader-resume-btn')?.addEventListener('click', () => {
-          const max = scrollEl.scrollHeight - scrollEl.clientHeight;
-          scrollEl.scrollTop = max * savedProgress;
-          resumeEl.hidden = true;
-          updateProgress(scrollEl);
-        });
-      } else if (savedProgress > 0.02) {
-        const max = scrollEl.scrollHeight - scrollEl.clientHeight;
-        scrollEl.scrollTop = max * savedProgress;
-      }
-      updateProgress(scrollEl);
-    });
+    requestAnimationFrame(() => updateProgress(scrollEl));
   } catch (err) {
     contentEl.replaceChildren();
     const msg = document.createElement('p');

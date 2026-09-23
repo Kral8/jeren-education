@@ -39,6 +39,41 @@
             <div class="admin-stat__label" data-i18n="admin.workChecks">Проверки работ</div>
           </div>
         </div>
+        <div class="admin-panel card card--glass" id="email-test-panel">
+          <h2 class="admin-panel__title" data-i18n="admin.emailTest">Проверка email</h2>
+          <p class="text-small text-muted" data-i18n="admin.emailTestHint">Отправьте тестовое письмо с кодом доступа.</p>
+          <form class="admin-form" id="email-test-form">
+            <div class="admin-form__row">
+              <input type="email" class="form-input" id="email-test-address" placeholder="name@example.com" required>
+              <button type="submit" class="btn btn--secondary" data-i18n="admin.emailTestSend">Отправить тест</button>
+            </div>
+          </form>
+          <p class="text-small" id="email-test-result" hidden></p>
+        </div>
+
+        <div class="admin-panel card card--glass" id="access-requests-panel">
+          <div class="admin-panel__head">
+            <h2 class="admin-panel__title" data-i18n="admin.requests">Заявки на доступ</h2>
+            <span class="badge badge--gold" id="stat-pending-requests">0</span>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table" id="requests-table">
+              <thead>
+                <tr>
+                  <th data-i18n="admin.tableTeacher">Учитель</th>
+                  <th data-i18n="login.email">Email</th>
+                  <th data-i18n="admin.tableLocation">Регион</th>
+                  <th data-i18n="login.organization">Организация</th>
+                  <th data-i18n="admin.tablePhone">Телефон</th>
+                  <th data-i18n="admin.tableStatus">Статус</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="requests-body"></tbody>
+            </table>
+          </div>
+        </div>
+
         <div class="admin-panel card card--glass">
           <h2 class="admin-panel__title" data-i18n="admin.teachers">Учителя</h2>
           <form class="admin-form" id="teacher-form">

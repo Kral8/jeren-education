@@ -27,7 +27,6 @@ function normalizeQuestion(item) {
     id: item.id,
     track: item.track,
     category: item.category,
-    difficulty: item.difficulty || 'medium',
     question: item.question,
     options,
     correct: Math.max(0, Math.min(options.length - 1, item.correct ?? 0)),
@@ -72,35 +71,27 @@ async function loadTrackPool(track, basePath) {
   }
 }
 
-function pickQuestions(pool, category, difficulty, count) {
-  let source = pool.filter((q) => q.category === category && q.difficulty === difficulty);
-  if (source.length < count) {
-    source = pool.filter((q) => q.category === category);
-  }
-  if (source.length < count) {
-    source = [...pool];
-  }
-  return shuffle(source);
-}
-
-export async function buildFreshTest(track, category, difficulty, basePath = '') {
+export async function buildFreshTest(track, category, basePath = '') {
   const pool = await loadTrackPool(track, basePath);
-  if (!pool.length) return [];
+  const categoryPool = pool.filter((q) => q.category === category);
+  if (!categoryPool.length) return [];
 
-  let available = filterUnused(pool.filter((q) => q.category === category || !category));
-  if (available.length < QUESTIONS_PER_TEST) {
-    const used = getUsedIds();
-    if (used.size > 30) {
-      setItem(USED_IDS_KEY, [...used].slice(Math.floor(used.size / 2)));
-      available = filterUnused(pool);
+  const questionCount = Math.min(QUESTIONS_PER_TEST, categoryPool.length);
+  let available = filterUnused(categoryPool);
+
+  if (available.length < questionCount) {
+    const categoryUsedCount = categoryPool.filter((q) => getUsedIds().has(q.id)).length;
+    if (categoryUsedCount >= categoryPool.length - questionCount) {
+      const used = getUsedIds();
+      categoryPool.forEach((q) => used.delete(q.id));
+      setItem(USED_IDS_KEY, [...used]);
+      available = categoryPool;
     } else {
-      available = pool;
+      available = categoryPool;
     }
   }
 
-  const ordered = pickQuestions(available, category, difficulty, QUESTIONS_PER_TEST * 4);
-  const selected = ordered.slice(0, QUESTIONS_PER_TEST);
-
+  const selected = shuffle(available).slice(0, questionCount);
   if (selected.length) markUsed(selected);
   return selected;
 }

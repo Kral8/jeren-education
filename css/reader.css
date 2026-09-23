@@ -92,6 +92,7 @@
 }
 
 .je-reader-layout {
+  position: relative;
   flex: 1;
   display: flex;
   min-height: 0;
@@ -191,16 +192,79 @@
   padding: var(--space-16);
 }
 
-.je-reader-resume {
-  position: fixed;
-  bottom: var(--space-6);
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-3) var(--space-5);
-  z-index: var(--z-toast);
+.je-reader-page:has(.je-reader__html) {
+  max-width: 920px;
+}
+
+.je-reader__html {
+  color: #E8E2D8;
+  overflow-x: auto;
+}
+
+.je-reader__html h1,
+.je-reader__html h2,
+.je-reader__html h3,
+.je-reader__html h4 {
+  font-family: var(--font-family-heading);
+  color: var(--color-brand-light);
+  line-height: 1.35;
+  margin: var(--space-8) 0 var(--space-4);
+}
+
+.je-reader__html h1:first-child,
+.je-reader__html h2:first-child,
+.je-reader__html h3:first-child {
+  margin-top: 0;
+}
+
+.je-reader__html p {
+  margin-bottom: var(--space-5);
+}
+
+.je-reader__html ul,
+.je-reader__html ol {
+  margin: 0 0 var(--space-5);
+  padding-left: 1.4em;
+}
+
+.je-reader__html li {
+  margin-bottom: var(--space-2);
+}
+
+.je-reader__html table {
+  width: 100%;
+  min-width: 480px;
+  border-collapse: collapse;
+  margin: var(--space-6) 0;
+  font-size: 0.92em;
+  table-layout: auto;
+}
+
+.je-reader__html th,
+.je-reader__html td {
+  border: 1px solid var(--color-border-default);
+  padding: var(--space-2) var(--space-3);
+  vertical-align: top;
+  word-break: break-word;
+}
+
+.je-reader__html th {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-brand-light);
+  font-weight: var(--font-weight-semibold);
+}
+
+.je-reader__html img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: var(--space-4) auto;
+  border-radius: var(--radius-md);
+}
+
+.je-reader__html strong,
+.je-reader__html b {
+  color: var(--color-text-primary);
 }
 
 .je-reader:fullscreen {
@@ -226,14 +290,6 @@
   .icon-btn {
     min-width: var(--min-touch-target);
     min-height: var(--min-touch-target);
-  }
-  .je-reader-resume {
-    left: var(--space-4);
-    right: var(--space-4);
-    transform: none;
-    width: auto;
-    flex-direction: column;
-    text-align: center;
   }
 }
 

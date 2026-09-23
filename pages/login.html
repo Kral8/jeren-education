@@ -24,7 +24,8 @@
 
           <div class="auth-card__choices" id="auth-choices">
             <button type="button" class="btn btn--primary btn--full" id="btn-has-code" data-i18n="login.hasCode">У меня есть код</button>
-            <button type="button" class="btn btn--secondary btn--full" id="btn-guest" data-i18n="login.guest">Войти как гость</button>
+            <button type="button" class="btn btn--secondary btn--full" id="btn-request-code" data-i18n="login.requestCode">Запросить пароль</button>
+            <button type="button" class="btn btn--ghost btn--full" id="btn-guest" data-i18n="login.guest">Войти как гость</button>
           </div>
 
           <form class="auth-card__form" id="auth-form" hidden>
@@ -32,14 +33,151 @@
             <input type="text" class="form-input auth-card__input" id="auth-code" autocomplete="off" data-i18n-placeholder="login.codePlaceholder" placeholder="Введите код">
             <p class="auth-card__error" id="auth-error" hidden data-i18n="login.invalidCode"></p>
             <button type="submit" class="btn btn--primary btn--full" data-i18n="login.submit">Войти</button>
+            <button type="button" class="btn btn--ghost btn--full" id="btn-back-choices" data-i18n="login.back">Назад</button>
           </form>
 
-          <p class="auth-card__note" data-i18n="login.guestNote">Гостевой режим: ограниченный доступ.</p>
+          <p class="auth-card__note" data-i18n="login.guestNote">Гостевой режим: ограниченный доступ без проверки работ.</p>
         </div>
       </section>
     </main>
     <div id="site-footer"></div>
   </div>
+
+  <div class="modal-overlay" id="request-modal" hidden aria-hidden="true">
+    <div class="modal modal--register card card--glass" role="dialog" aria-labelledby="request-modal-title">
+      <button type="button" class="modal__close" id="request-modal-close" aria-label="Close">&times;</button>
+      <div class="register-modal__head">
+        <div class="modal__icon" aria-hidden="true">✦</div>
+        <h2 class="modal__title" id="request-modal-title" data-i18n="login.requestTitle">Регистрация</h2>
+        <p class="modal__subtitle" data-i18n="login.requestSubtitle">Заполните профиль — код доступа будет отправлен на вашу почту.</p>
+      </div>
+
+      <form class="access-request-form" id="request-form" novalidate>
+        <div class="register-section">
+          <div class="register-section__label" data-i18n="login.sectionPersonal">Личные данные</div>
+          <div class="access-request-form__grid">
+            <div class="form-group">
+              <label class="form-label" for="req-last" data-i18n="login.lastName">Фамилия</label>
+              <input type="text" class="form-input form-input--premium" id="req-last" required autocomplete="family-name">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="req-first" data-i18n="login.firstName">Имя</label>
+              <input type="text" class="form-input form-input--premium" id="req-first" required autocomplete="given-name">
+            </div>
+          </div>
+        </div>
+
+        <div class="register-section">
+          <div class="register-section__label" data-i18n="login.sectionLocation">Страна и регион</div>
+          <div class="access-request-form__grid">
+            <div class="form-group access-request-form__wide">
+              <label class="form-label" for="req-country" data-i18n="login.country">Страна</label>
+              <div class="select-premium">
+                <select class="form-input form-input--premium" id="req-country" required></select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="req-region" data-i18n="login.region">Регион / велаят</label>
+              <div class="select-premium">
+                <select class="form-input form-input--premium" id="req-region" required disabled></select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="req-city" data-i18n="login.city">Город</label>
+              <div class="select-premium">
+                <select class="form-input form-input--premium" id="req-city" required disabled></select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="register-section">
+          <div class="register-section__label" data-i18n="login.sectionOrganization">Место работы</div>
+          <div class="form-group access-request-form__wide">
+            <label class="form-label" for="req-org" data-i18n="login.organization">Предприятие / учебное заведение</label>
+            <div class="autocomplete-field" id="org-autocomplete">
+              <input type="text" class="form-input form-input--premium" id="req-org" required autocomplete="organization" disabled
+                data-i18n-placeholder="login.organizationPlaceholder" placeholder="Выберите город, затем учреждение">
+              <div class="autocomplete-field__list" id="org-suggestions" hidden role="listbox"></div>
+            </div>
+            <p class="form-hint" id="org-hint" data-i18n="login.organizationHint">Список университетов и школ выбранного города</p>
+          </div>
+        </div>
+
+        <div class="register-section">
+          <div class="register-section__label" data-i18n="login.sectionContacts">Контакты</div>
+          <div class="access-request-form__grid">
+            <div class="form-group access-request-form__wide">
+              <label class="form-label" for="req-phone" data-i18n="login.phone">Номер телефона</label>
+              <div class="phone-input" id="phone-input">
+                <span class="phone-input__flag" id="phone-flag" aria-hidden="true">🇹🇲</span>
+                <span class="phone-input__code" id="phone-code">+993</span>
+                <input type="tel" class="form-input form-input--premium phone-input__number" id="req-phone" required inputmode="numeric" autocomplete="tel-national" placeholder="61234567">
+              </div>
+            </div>
+            <div class="form-group access-request-form__wide">
+              <label class="form-label" for="req-email" data-i18n="login.email">Электронная почта</label>
+              <input type="email" class="form-input form-input--premium" id="req-email" required autocomplete="email" placeholder="name@example.com">
+            </div>
+          </div>
+        </div>
+
+        <div class="register-section">
+          <div class="register-section__label" data-i18n="login.deliveryLabel">Получение кода</div>
+          <div class="delivery-choice" role="radiogroup" aria-label="Delivery method">
+            <label class="delivery-card delivery-card--featured">
+              <input type="radio" name="delivery" value="email" checked>
+              <span class="delivery-card__icon" aria-hidden="true">✉</span>
+              <span class="delivery-card__title" data-i18n="login.deliveryEmailTitle">Отправить на email</span>
+              <span class="delivery-card__desc" data-i18n="login.deliveryEmailDesc">Код придёт на почту сразу после отправки формы</span>
+            </label>
+            <label class="delivery-card">
+              <input type="radio" name="delivery" value="screen">
+              <span class="delivery-card__icon" aria-hidden="true">✦</span>
+              <span class="delivery-card__title" data-i18n="login.deliveryScreenTitle">Дождаться на сайте</span>
+              <span class="delivery-card__desc" data-i18n="login.deliveryScreenDesc">Код появится здесь после проверки администратором</span>
+            </label>
+          </div>
+        </div>
+
+        <p class="auth-card__error" id="request-error" hidden></p>
+        <button type="submit" class="btn btn--primary btn--full register-submit" id="request-submit" data-i18n="login.requestSubmit">Получить код доступа</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="request-sent-modal" hidden aria-hidden="true">
+    <div class="modal card card--glass modal--success" role="dialog">
+      <div class="modal__icon modal__icon--success" aria-hidden="true">✓</div>
+      <h2 class="modal__title" data-i18n="login.requestSentTitle">Заявка отправлена</h2>
+      <p class="modal__subtitle" data-i18n="login.requestSentText">Ваши данные переданы администратору. Когда доступ будет одобрен, здесь появится ваш код.</p>
+      <div class="modal__status" id="request-pending-status">
+        <span class="modal__spinner" aria-hidden="true"></span>
+        <span data-i18n="login.requestPending">Ожидаем решения...</span>
+      </div>
+      <button type="button" class="btn btn--secondary btn--full" id="request-sent-close" data-i18n="login.close">Закрыть</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="request-email-modal" hidden aria-hidden="true">
+    <div class="modal card card--glass modal--celebrate" role="dialog">
+      <div class="modal__icon modal__icon--success" aria-hidden="true">✉</div>
+      <h2 class="modal__title" data-i18n="login.emailSentTitle">Код отправлен</h2>
+      <p class="modal__subtitle" id="email-sent-text" data-i18n="login.emailSentText">Код доступа отправлен на вашу электронную почту.</p>
+      <button type="button" class="btn btn--primary btn--full" id="email-sent-login" data-i18n="login.emailSentAction">Войти с кодом из письма</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="request-approved-modal" hidden aria-hidden="true">
+    <div class="modal card card--glass modal--celebrate" role="dialog">
+      <div class="modal__icon modal__icon--gold" aria-hidden="true">★</div>
+      <h2 class="modal__title" data-i18n="login.codeReceivedTitle">Ваш код получен</h2>
+      <p class="modal__subtitle" data-i18n="login.codeReceivedText">Сохраните код — он открывает полный доступ к платформе.</p>
+      <div class="access-code-display" id="approved-code">—</div>
+      <button type="button" class="btn btn--primary btn--full" id="approved-use-code" data-i18n="login.useCode">Войти с этим кодом</button>
+    </div>
+  </div>
+
   <script type="module" src="../js/app.js"></script>
   <script type="module" src="../js/pages/login.js"></script>
 </body>

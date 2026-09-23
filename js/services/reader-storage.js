@@ -16,14 +16,6 @@ export function getFontSizePx(index = getFontSizeIndex()) {
   return FONT_SIZES[index] ?? FONT_SIZES[1];
 }
 
-export function getProgress(bookId) {
-  return getItem(`reader_progress_${bookId}`, 0);
-}
-
-export function saveProgress(bookId, ratio) {
-  setItem(`reader_progress_${bookId}`, Math.max(0, Math.min(1, ratio)));
-}
-
 export function getLastBookId() {
   return getItem('reader_last_book', null);
 }

@@ -6,6 +6,14 @@ compatibility_date = "2024-09-13"
 #   wrangler secret put GEMINI_API_KEY
 #   wrangler secret put JEREN_ADMIN_CODE
 #   wrangler secret put SESSION_SECRET
+#   wrangler secret put SMTP_PASSWORD
+
+[vars]
+SMTP_HOST = "smtp.mail.ru"
+SMTP_PORT = "465"
+SMTP_USER = "Jeren666@bk.ru"
+EMAIL_FROM = "Jeren666@bk.ru"
+EMAIL_FROM_NAME = "JEREN EDUCATION"
 
 [[kv_namespaces]]
 binding = "TEACHERS_KV"

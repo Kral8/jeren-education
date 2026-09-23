@@ -5,7 +5,7 @@
 
 import { getBookById, getBookFileUrl } from '../library.service.js';
 import { parseRtfToDocument } from './rtf-parser.js';
-import { renderDocument, renderToc } from './document-renderer.js';
+import { renderDocument, renderToc, renderHtmlDocument } from './document-renderer.js';
 
 async function loadPreconvertedContent(bookId, basePath) {
   const response = await fetch(`${basePath}data/library/content/${bookId}.json`);
@@ -33,6 +33,9 @@ export async function loadBookDocument(bookId, basePath) {
   if (!book) throw new Error('Book not found');
 
   const pre = await loadPreconvertedContent(book.id, basePath);
+  if (pre?.html) {
+    return { book, mode: 'html', html: pre.html, toc: pre.toc || [] };
+  }
   if (pre?.sections?.length) {
     return { book, mode: 'document', ...pre, toc: buildTocFromSections(pre.sections) };
   }
@@ -74,6 +77,16 @@ export function mountReader(documentModel, elements) {
     frame.title = documentModel.book.title;
     contentEl.appendChild(frame);
     if (tocEl) tocEl.hidden = true;
+    return;
+  }
+
+  if (documentModel.mode === 'html') {
+    renderHtmlDocument(documentModel.html, contentEl);
+    if (tocEl && scrollEl && documentModel.toc?.length >= 3) {
+      renderToc(documentModel.toc, tocEl, scrollEl);
+    } else if (tocEl) {
+      tocEl.hidden = true;
+    }
     return;
   }
 

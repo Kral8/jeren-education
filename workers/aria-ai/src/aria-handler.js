@@ -1,5 +1,6 @@
 import { jsonResponse } from './cors.js';
 import { callGeminiText } from './gemini.js';
+import { buildServerFallback } from './fallback.js';
 
 const ARIA_SYSTEM = `Ты — Ария, виртуальная AI-помощница образовательной платформы JEREN EDUCATION.
 
@@ -42,7 +43,7 @@ function buildPrompt(message, history, userContext) {
 }
 
 export async function handleAriaChat(request, env, origin, session) {
-  const apiKey = env.GEMINI_API_KEY;
+  const apiKey = String(env.GEMINI_API_KEY || '').trim();
   if (!apiKey) {
     console.error('GEMINI_API_KEY missing');
     return jsonResponse({ success: false, error: 'AI not configured', code: 'NO_API_KEY' }, 503, origin);
@@ -65,19 +66,32 @@ export async function handleAriaChat(request, env, origin, session) {
     displayName: session.displayName,
   } : null;
 
-  try {
-    const answer = await callGeminiText(
-      buildPrompt(message, body.history, userContext),
-      apiKey,
-    );
-    return jsonResponse({ success: true, answer, text: answer, reply: answer }, 200, origin);
-  } catch (err) {
-    console.error('Aria error', err?.message?.slice(0, 500));
-    return jsonResponse({
-      success: false,
-      error: 'AI temporarily unavailable',
-      code: 'GEMINI_ERROR',
-      debug: err?.message?.slice(0, 200),
-    }, 503, origin);
+  const prompt = buildPrompt(message, body.history, userContext);
+
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      const answer = await callGeminiText(prompt, apiKey);
+      return jsonResponse({ success: true, answer, text: answer, reply: answer }, 200, origin);
+    } catch (err) {
+      console.error(`Aria attempt ${attempt + 1}`, err?.message?.slice(0, 500));
+      if (attempt === 0) continue;
+    }
   }
+
+  const fallback = buildServerFallback(message);
+  if (fallback) {
+    return jsonResponse({
+      success: true,
+      answer: fallback,
+      text: fallback,
+      reply: fallback,
+      fallback: true,
+    }, 200, origin);
+  }
+
+  return jsonResponse({
+    success: false,
+    error: 'AI temporarily unavailable',
+    code: 'GEMINI_ERROR',
+  }, 503, origin);
 }
